@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drude e Sommerfeld — roteiro com deduções</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global', scale: 1.02 },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+:root{
+  --paper:#FCFCFA;
+  --ink:#1A1D21;
+  --pen:#1F3A93;
+  --pen-soft:#E8ECF7;
+  --graphite:#6A7078;
+  --red:#9C2B22;
+  --red-soft:#F6EBE9;
+  --rule:#E3E4DE;
+  --hl:#FBF3D8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#15171A;
+    --ink:#E7E5E0;
+    --pen:#93AAE8;
+    --pen-soft:#1C2331;
+    --graphite:#969CA4;
+    --red:#DE8C82;
+    --red-soft:#2A2020;
+    --rule:#2A2E33;
+    --hl:#2E2A1C;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15171A;
+  --ink:#E7E5E0;
+  --pen:#93AAE8;
+  --pen-soft:#1C2331;
+  --graphite:#969CA4;
+  --red:#DE8C82;
+  --red-soft:#2A2020;
+  --rule:#2A2E33;
+  --hl:#2E2A1C;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1.5rem}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:18px;
+  line-height:1.62;
+  -webkit-text-size-adjust:100%;
+}
+
+/* ---------- layout ---------- */
+.shell{display:flex;gap:2.5rem;max-width:1180px;margin:0 auto;padding:0 1.25rem}
+.rail{
+  flex:0 0 218px;
+  position:sticky;top:0;align-self:flex-start;
+  height:100vh;overflow-y:auto;
+  padding:2.2rem 0 3rem;
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:.79rem;line-height:1.45;
+}
+.rail a{display:block;color:var(--graphite);text-decoration:none;padding:.2rem 0;border-left:2px solid transparent;padding-left:.7rem;margin-left:-.7rem}
+.rail a:hover{color:var(--pen);border-left-color:var(--pen)}
+.rail a.on{color:var(--ink);border-left-color:var(--pen)}
+.rail .grp{margin:1.25rem 0 .35rem;color:var(--ink);font-weight:600;font-size:.72rem;letter-spacing:.02em}
+.rail .grp:first-child{margin-top:0}
+main{flex:1 1 auto;min-width:0;max-width:72ch;padding:2.2rem 0 6rem}
+
+/* ---------- tipografia ---------- */
+h1{font-size:2.05rem;line-height:1.16;font-weight:700;margin:0 0 .6rem;letter-spacing:-.012em}
+h2{font-size:1.42rem;font-weight:700;margin:3.4rem 0 .9rem;padding-top:1.1rem;border-top:1px solid var(--rule);letter-spacing:-.008em}
+h3{font-size:1.14rem;font-weight:600;margin:2.3rem 0 .6rem;color:var(--pen)}
+h4{font-family:"IBM Plex Sans",sans-serif;font-size:.86rem;font-weight:600;margin:1.6rem 0 .4rem}
+p{margin:0 0 1rem}
+a{color:var(--pen)}
+strong{font-weight:600}
+blockquote{margin:1.2rem 0;padding:.1rem 0 .1rem 1.1rem;border-left:3px solid var(--pen);color:var(--ink);font-style:italic}
+ul,ol{margin:0 0 1rem;padding-left:1.35rem}
+li{margin:.3rem 0}
+hr{border:0;border-top:1px solid var(--rule);margin:2.4rem 0}
+code{font-family:"IBM Plex Sans",sans-serif;font-size:.9em;background:var(--pen-soft);padding:.05em .3em;border-radius:3px}
+
+.doc-head{padding:1rem 0 .5rem}
+.kicker{font-family:"IBM Plex Sans",sans-serif;font-size:.8rem;color:var(--graphite);margin:0 0 .9rem}
+.epigraph{
+  margin:1.6rem 0 2rem;padding:1.1rem 1.25rem;
+  background:var(--pen-soft);border-radius:2px;
+  font-size:1.06rem;line-height:1.5;
+}
+.epigraph .lbl{display:block;font-family:"IBM Plex Sans",sans-serif;font-size:.74rem;color:var(--graphite);margin-bottom:.35rem}
+
+/* ---------- tabelas ---------- */
+.tw{overflow-x:auto;margin:1.2rem 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:.42rem .7rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:"IBM Plex Sans",sans-serif;font-size:.78rem;font-weight:600;color:var(--graphite);border-bottom:1.5px solid var(--ink)}
+tbody tr:last-child td{border-bottom:none}
+
+/* ---------- barra de 50 min ---------- */
+.clock{display:flex;width:100%;margin:1.4rem 0 .5rem;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.clock a{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:.5rem .4rem;text-decoration:none;color:var(--ink);
+  border-right:1px solid var(--rule);
+  font-family:"IBM Plex Sans",sans-serif;font-size:.68rem;line-height:1.25;
+  min-width:0;
+}
+.clock a:last-child{border-right:none}
+.clock a:hover{background:var(--pen-soft)}
+.clock .n{font-weight:600;color:var(--pen)}
+.clock .t{color:var(--graphite);white-space:nowrap}
+.clock-legend{font-family:"IBM Plex Sans",sans-serif;font-size:.74rem;color:var(--graphite);margin-bottom:1.6rem}
+
+/* ---------- demonstrações ---------- */
+.demo{
+  margin:1.7rem 0;
+  border-left:3px solid var(--pen);
+  background:var(--pen-soft);
+  border-radius:0 3px 3px 0;
+}
+.demo>summary{
+  cursor:pointer;list-style:none;
+  padding:.72rem 1rem;
+  font-family:"IBM Plex Sans",sans-serif;font-size:.86rem;font-weight:600;
+  display:flex;gap:.55rem;align-items:baseline;
+}
+.demo>summary::-webkit-details-marker{display:none}
+.demo>summary::before{
+  content:"›";display:inline-block;color:var(--pen);font-size:1.1rem;line-height:1;
+  transform:rotate(0deg);transition:transform .15s ease;flex:0 0 auto;
+}
+.demo[open]>summary::before{transform:rotate(90deg)}
+.demo>summary .tag{color:var(--pen);flex:0 0 auto}
+.demo .body{padding:0 1.15rem .3rem;font-size:.97rem}
+.demo .body>p:first-child{margin-top:0}
+.src{
+  margin:0;padding:.6rem 1.15rem .8rem;
+  border-top:1px dashed var(--rule);
+  font-family:"IBM Plex Sans",sans-serif;font-size:.78rem;line-height:1.5;
+  color:var(--red);
+}
+.src b{font-weight:600}
+.demo table{font-size:.88rem}
+
+.callout{margin:1.4rem 0;padding:.85rem 1.1rem;border:1px solid var(--rule);border-radius:3px;font-size:.95rem}
+.callout .lbl{font-family:"IBM Plex Sans",sans-serif;font-size:.76rem;font-weight:600;color:var(--graphite);display:block;margin-bottom:.3rem}
+.q{background:var(--hl);border:none;border-left:3px solid #C9A227}
+
+/* ---------- barra de ferramentas ---------- */
+.tools{
+  display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;
+  margin:1.8rem 0 0;padding:.7rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  font-family:"IBM Plex Sans",sans-serif;font-size:.78rem;
+}
+.tools button{
+  font:inherit;cursor:pointer;background:none;color:var(--ink);
+  border:1px solid var(--rule);border-radius:2px;padding:.32rem .65rem;
+}
+.tools button:hover{border-color:var(--pen);color:var(--pen)}
+.tools span{color:var(--graphite)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+
+mjx-container[display="true"]{margin:1.1rem 0 !important;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+
+@media (max-width:900px){
+  body{font-size:17px}
+  .shell{flex-direction:column;gap:0;padding:0 1.05rem}
+  .rail{position:static;height:auto;flex:none;padding:1.2rem 0 .5rem;border-bottom:1px solid var(--rule)}
+  .rail-inner{display:none}
+  .rail.open .rail-inner{display:block}
+  .rail-toggle{display:block;font:inherit;font-weight:600;background:none;border:1px solid var(--rule);border-radius:2px;color:var(--ink);padding:.35rem .6rem;cursor:pointer}
+  main{max-width:none;padding-top:1.4rem}
+  .clock{flex-wrap:wrap}
+  .clock a{flex:1 1 25% !important;border-bottom:1px solid var(--rule)}
+  h1{font-size:1.7rem}
+}
+@media (min-width:901px){.rail-toggle{display:none}}
+@media print{
+  .rail,.tools,.clock-legend{display:none}
+  body{font-size:10.5pt;background:#fff;color:#000}
+  .shell{display:block;padding:0}
+  main{max-width:none;padding:0}
+  .demo{break-inside:avoid;background:#fff;border-left:2px solid #333}
+  h2{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="rail" id="rail">
+  <button class="rail-toggle" id="railToggle" aria-expanded="false">Sumário</button>
+  <div class="rail-inner">
+    <div class="grp">Preparação</div>
+    <a href="#parte1">I — Plano de aula</a>
+    <a href="#parte2">II — Cronometragem</a>
+    <a href="#mapa">Mapa das deduções</a>
+    <div class="grp">III — Desenvolvimento</div>
+    <a href="#b1">1 · Contextualização</a>
+    <a href="#b2">2 · Hipóteses de Drude</a>
+    <a href="#b3">3 · Condutividade DC</a>
+    <a href="#b4">4 · Wiedemann–Franz</a>
+    <a href="#b5">5 · A crise</a>
+    <a href="#b6">6 · Sommerfeld</a>
+    <a href="#b7">7 · O cancelamento</a>
+    <a href="#b8">8 · Fechamento</a>
+    <div class="grp">Apoio</div>
+    <a href="#parte4">IV — Mapa de quadro</a>
+    <a href="#parte5">V — Arguição prevista</a>
+    <a href="#parte6">VI — Observações</a>
+    <a href="#ref">Referências</a>
+  </div>
+</nav>
+
+<main>
+
+<header class="doc-head">
+  <p class="kicker">Prova didática · 50 min · Física do Estado Sólido I · banca de doutores e livre-docentes</p>
+  <h1>O modelo de Drude e a teoria de Sommerfeld: condutividade elétrica e térmica em metais</h1>
+  <p class="kicker">Roteiro integral com as dezessete deduções inseridas nos blocos em que são usadas. Cada dedução traz, ao pé, onde encontrá-la na bibliografia.</p>
+
+  <div class="epigraph">
+    <span class="lbl">Pergunta condutora — vai ao quadro no minuto 3 e fica lá a aula inteira</span>
+    Por que a razão \(\kappa/\sigma T\) é praticamente a mesma para cobre, prata, ouro e alumínio?
+  </div>
+
+  <div class="tools">
+    <button id="collapseAll">Recolher deduções</button>
+    <button id="expandAll">Expandir deduções</button>
+    <button id="themeBtn">Alternar tema</button>
+    <span id="toolsNote">Recolhido = folha em branco. Tente antes de abrir.</span>
+  </div>
+</header>
+
+<h2 id="parte1">Parte I — Plano de aula</h2>
+
+<h3>Identificação</h3>
+<ul>
+  <li><strong>Disciplina:</strong> Física do Estado Sólido I (ou Introdução à Física da Matéria Condensada)</li>
+  <li><strong>Unidade:</strong> Teorias de elétrons livres em metais</li>
+  <li><strong>Posição no curso:</strong> primeira unidade; antecede potencial periódico, teorema de Bloch e teoria de bandas</li>
+  <li><strong>Duração:</strong> 50 min</li>
+</ul>
+
+<h3>Pré-requisitos do aluno</h3>
+<ol>
+  <li>Física Estatística: distribuições de Maxwell–Boltzmann e de Fermi–Dirac; conceito de potencial químico</li>
+  <li>Mecânica Quântica: partícula em caixa, condições de contorno, princípio de exclusão de Pauli</li>
+  <li>Eletromagnetismo: lei de Ohm local, densidade de corrente, efeito Hall</li>
+  <li>Teoria cinética elementar dos gases: livre caminho médio, transporte por difusão</li>
+</ol>
+
+<h3>Objetivo geral</h3>
+<p>Compreender como o gás de elétrons livres explica quantitativamente a condução elétrica e térmica em metais, e por que a substituição da estatística clássica pela quântica é <em>necessária</em> — e por que, ainda assim, <em>insuficiente</em>.</p>
+
+<h3>Objetivos específicos</h3>
+<p>Ao final da aula, o aluno deve ser capaz de:</p>
+<ol>
+  <li>Enunciar as quatro hipóteses do modelo de Drude e estimar a densidade eletrônica <em>n</em> de um metal;</li>
+  <li>Deduzir \(\sigma = ne^2\tau/m\) a partir da equação de movimento com termo de amortecimento e extrair \(\tau\) de dados de resistividade;</li>
+  <li>Aplicar a teoria cinética para obter \(\kappa\) e a razão de Wiedemann–Franz, identificando o número de Lorenz;</li>
+  <li>Explicar por que o resultado clássico "funciona" apenas por cancelamento de dois erros de ordem \(10^2\);</li>
+  <li>Construir a esfera de Fermi, obter \(\varepsilon_F\), \(T_F\) e \(v_F\), e justificar a degenerescência do gás eletrônico à temperatura ambiente;</li>
+  <li>Recalcular \(c_v\) e \(\kappa\) com estatística de Fermi–Dirac e obter \(L_0 = (\pi^2/3)(k_B/e)^2\);</li>
+  <li>Listar os fenômenos que <strong>nem</strong> Drude <strong>nem</strong> Sommerfeld explicam, motivando a teoria de bandas.</li>
+</ol>
+
+<h3>Metodologia</h3>
+<p>Exposição dialogada com desenvolvimento no quadro. Estrutura em arco-problema: sucesso aparente → crise → reconstrução → nova crise. Três momentos de checagem com a turma (questões dirigidas, indicadas no roteiro como <strong>[Q]</strong>).</p>
+
+<h3>Recursos</h3>
+<p>Quadro branco (uso obrigatório para as deduções). Opcional: uma folha impressa com a tabela de valores de \(n\), \(r_s/a_0\), \(\varepsilon_F\), \(T_F\) e \(v_F\) para ~10 metais (A&amp;M, Tabelas 1.1 e 2.1).</p>
+
+<h3>Avaliação da aprendizagem</h3>
+<p>Lista de exercícios: A&amp;M cap. 1, problemas 1 e 3; cap. 2, problemas 1 e 2. Questão dissertativa: "Em que sentido o acordo de Drude com a lei de Wiedemann–Franz foi um acidente historicamente produtivo?"</p>
+
+<h2 id="parte2">Parte II — Cronometragem</h2>
+
+<div class="clock" id="clock">
+  <a href="#b1" style="flex:4 1 0"><span class="n">1</span><span class="t">0–4</span></a>
+  <a href="#b2" style="flex:6 1 0"><span class="n">2</span><span class="t">4–10</span></a>
+  <a href="#b3" style="flex:8 1 0"><span class="n">3</span><span class="t">10–18</span></a>
+  <a href="#b4" style="flex:7 1 0"><span class="n">4</span><span class="t">18–25</span></a>
+  <a href="#b5" style="flex:5 1 0"><span class="n">5</span><span class="t">25–30</span></a>
+  <a href="#b6" style="flex:8 1 0"><span class="n">6</span><span class="t">30–38</span></a>
+  <a href="#b7" style="flex:7 1 0"><span class="n">7</span><span class="t">38–45</span></a>
+  <a href="#b8" style="flex:5 1 0"><span class="n">8</span><span class="t">45–50</span></a>
+</div>
+<p class="clock-legend">Largura proporcional ao tempo. Os oito blocos são núcleo — nenhum é descartável.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Bloco</th><th>Tempo</th><th>Acumulado</th><th>Prioridade</th></tr></thead>
+<tbody>
+<tr><td>1. Contextualização e problema</td><td>0–4</td><td>4 min</td><td>NÚCLEO</td></tr>
+<tr><td>2. Hipóteses de Drude; estimativa de <em>n</em></td><td>4–10</td><td>10 min</td><td>NÚCLEO</td></tr>
+<tr><td>3. Condutividade DC; extração de \(\tau\) e \(\ell\)</td><td>10–18</td><td>18 min</td><td>NÚCLEO</td></tr>
+<tr><td>4. Condução térmica e Wiedemann–Franz clássico</td><td>18–25</td><td>25 min</td><td>NÚCLEO</td></tr>
+<tr><td>5. As falhas: calor específico e poder termoelétrico</td><td>25–30</td><td>30 min</td><td>NÚCLEO</td></tr>
+<tr><td>6. Sommerfeld: esfera de Fermi, \(\varepsilon_F\), \(T_F\), \(v_F\)</td><td>30–38</td><td>38 min</td><td>NÚCLEO</td></tr>
+<tr><td>7. \(c_v\) e \(\kappa\) quânticos; \(L_0\) correto</td><td>38–45</td><td>45 min</td><td>NÚCLEO</td></tr>
+<tr><td>8. O que resta falhar → teoria de bandas; síntese</td><td>45–50</td><td>50 min</td><td>NÚCLEO</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>Blocos comprimíveis se o tempo apertar</strong> (marcados adiante como <strong>[COMP]</strong>): condutividade AC e frequência de plasma; efeito Hall; expansão de Sommerfeld formal; regra de Matthiessen.</p>
+<p><strong>Se sobrar tempo</strong> (marcados <strong>[EXTRA]</strong>): calor específico \(\gamma T + AT^3\) e a extração experimental de \(\gamma\); falha da lei WF em temperaturas intermediárias.</p>
+
+<h2 id="mapa">Mapa das deduções</h2>
+
+<p>As dezessete deduções estão inseridas no ponto da aula em que são usadas. Esta tabela é o índice de consulta — e a lista do teste de folha em branco.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Resultado</th><th>Bloco</th><th>Fonte principal</th></tr></thead>
+<tbody>
+<tr><td><a href="#d1">D1</a></td><td>\(n = N_A Z\rho_m/A\) e raio de Wigner–Seitz</td><td>2</td><td>A&amp;M 1.1</td></tr>
+<tr><td><a href="#d2">D2</a></td><td>\(d\mathbf{p}/dt = -\mathbf{p}/\tau + \mathbf{F}\)</td><td>3</td><td>A&amp;M 1.2 · Reif 12.1</td></tr>
+<tr><td><a href="#d3">D3</a></td><td>\(\sigma = ne^2\tau/m\); extração de \(\tau\) e \(\ell\)</td><td>3</td><td>A&amp;M 1.2</td></tr>
+<tr><td><a href="#d4">D4</a></td><td>\(\sigma(\omega)\), \(\epsilon(\omega)\), \(\omega_p\)</td><td>3</td><td>A&amp;M 1.4–1.5</td></tr>
+<tr><td><a href="#d5">D5</a></td><td>\(R_H = -1/nec\)</td><td>3</td><td>A&amp;M 1.3</td></tr>
+<tr><td><a href="#d6">D6</a></td><td>\(\kappa = \frac13 v^2\tau c_v\)</td><td>4</td><td>Reif 12.4</td></tr>
+<tr><td><a href="#d7">D7</a></td><td>\(L_{cl} = \frac32 (k_B/e)^2\)</td><td>4</td><td>A&amp;M 1.6</td></tr>
+<tr><td><a href="#d8">D8</a></td><td>\(Q = -c_v/3ne\)</td><td>5</td><td>A&amp;M 1.7</td></tr>
+<tr><td><a href="#d9">D9</a></td><td>Critério \(n\lambda^3 \ll 1\)</td><td>5</td><td>Salinas 8</td></tr>
+<tr><td><a href="#d10">D10</a></td><td>Fermi–Dirac do grande canônico</td><td>6</td><td>Salinas 8 · Reif 9</td></tr>
+<tr><td><a href="#d11">D11</a></td><td>\(n = k_F^3/3\pi^2\)</td><td>6</td><td>A&amp;M 2</td></tr>
+<tr><td><a href="#d12">D12</a></td><td>\(k_F, \varepsilon_F, T_F, v_F\) do Cu</td><td>6</td><td>A&amp;M 2, Tab. 2.1</td></tr>
+<tr><td><a href="#d13">D13</a></td><td>\(g(\varepsilon)\) e \(g(\varepsilon_F) = 3n/2\varepsilon_F\)</td><td>6</td><td>A&amp;M 2</td></tr>
+<tr><td><a href="#d14">D14</a></td><td>Expansão de Sommerfeld; \(\mu(T)\)</td><td>7</td><td>A&amp;M Apêndice C</td></tr>
+<tr><td><a href="#d15">D15</a></td><td>\(c_v = \frac{\pi^2}{3}k_B^2 T g(\varepsilon_F)\)</td><td>7</td><td>A&amp;M 2</td></tr>
+<tr><td><a href="#d16">D16</a></td><td>\(L_0 = \frac{\pi^2}{3}(k_B/e)^2\)</td><td>7</td><td>A&amp;M 2</td></tr>
+<tr><td><a href="#d17">D17</a></td><td>O cancelamento: \(2\pi^2/9\)</td><td>7</td><td>Simon 4 (síntese)</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="clock-legend">Localização por capítulo e seção do A&amp;M (ed. 1976) — a numeração de equações varia entre tiragens, então as citações apontam seção, não página.</p>
+
+<h2 id="parte3">Parte III — Desenvolvimento</h2>
+
+<h3 id="b1">Bloco 1 — Contextualização (0–4 min)</h3>
+
+<p><strong>Abertura.</strong> Situar o problema historicamente: Thomson identifica o elétron em 1897. Três anos depois, Drude propõe que os metais são um <em>gás</em> desses elétrons recém-descobertos. É a primeira tentativa de explicar microscopicamente um conjunto de leis empíricas já bem estabelecidas:</p>
+
+<ul>
+  <li>Lei de Ohm (1827): \(\mathbf{j} = \sigma\mathbf{E}\)</li>
+  <li>Lei de Wiedemann–Franz (1853): \(\kappa/\sigma \approx \mathrm{const}\times T\), com a mesma constante para metais diferentes</li>
+  <li>Lei de Dulong–Petit: \(c = 3nk_B\) — e, crucialmente, metais <strong>não</strong> apresentam calor específico maior que isolantes</li>
+</ul>
+
+<p><strong>Colocar a pergunta condutora no quadro e deixá-la lá a aula inteira:</strong></p>
+
+<blockquote>Por que a razão \(\kappa/\sigma T\) é praticamente a mesma para cobre, prata, ouro e alumínio?</blockquote>
+
+<p>Anunciar a estrutura: vamos construir Drude, ver que ele acerta essa lei, descobrir que acertou por sorte, e reconstruir tudo com Fermi–Dirac.</p>
+
+<h3 id="b2">Bloco 2 — As hipóteses de Drude (4–10 min)</h3>
+
+<p>Escrever as quatro hipóteses de forma explícita — a banca valoriza o rigor no enunciado dos postulados:</p>
+
+<p><strong>H1 — Elétrons livres.</strong> Entre colisões, despreza-se a interação elétron–íon. Os elétrons de valência se desprendem; os íons formam um fundo fixo.</p>
+
+<p><strong>H2 — Elétrons independentes.</strong> Despreza-se também a interação elétron–elétron.</p>
+
+<p><strong>H3 — Colisões instantâneas</strong> que alteram abruptamente a velocidade. Drude as imaginava como espalhamento pelos íons — veremos que essa identificação está errada.</p>
+
+<p><strong>H4 — Tempo de relaxação \(\tau\).</strong> A probabilidade de sofrer colisão em \(dt\) é \(dt/\tau\), independente da posição e da velocidade do elétron. Após a colisão, o elétron emerge com velocidade aleatória, com módulo apropriado à temperatura <strong>local</strong> — é só por meio das colisões que o equilíbrio térmico é alcançado.</p>
+
+<p><strong>Estimativa de n.</strong> Com \(Z\) elétrons de condução por átomo:</p>
+
+$$n = N_A \frac{Z\rho_m}{A}$$
+
+<p>Fazer o cálculo para o cobre ao vivo (\(Z = 1\), \(\rho_m = 8{,}96\) g/cm³, \(A = 63{,}5\)): \(n \approx 8{,}5 \times 10^{22}\) cm⁻³.</p>
+
+<div class="callout q"><span class="lbl">[Q] Pergunta à turma</span>Como isso se compara com um gás ideal nas CNTP (~\(2{,}7\times10^{19}\) cm⁻³)?</div>
+
+<p>Resposta: cerca de mil vezes mais denso. Guardar essa observação — ela é o primeiro sinal de que tratar o sistema como gás clássico diluído é temerário.</p>
+
+<p>Definir o raio de Wigner–Seitz, útil como parâmetro adimensional universal:</p>
+
+$$\frac{4}{3}\pi r_s^3 = \frac{1}{n} \quad\Longrightarrow\quad \frac{r_s}{a_0} \approx 2\text{–}6 \text{ para metais}$$
+
+<details class="demo" open id="d1">
+<summary><span class="tag">D1</span> Densidade eletrônica e raio de Wigner–Seitz</summary>
+<div class="body">
+
+<p><strong>Contagem.</strong> Um mol do metal tem massa \(A\) gramas e ocupa volume \(A/\rho_m\). Nele há \(N_A\) átomos, cada um cedendo \(Z\) elétrons de condução. Logo</p>
+
+$$n = \frac{Z N_A}{A/\rho_m} = N_A\,\frac{Z\rho_m}{A}.$$
+
+<p><strong>Cobre</strong> (\(Z=1\), \(\rho_m = 8{,}96\) g/cm³, \(A = 63{,}5\) g/mol):</p>
+
+$$n = 6{,}022\times10^{23}\times\frac{8{,}96}{63{,}5} = 8{,}50\times10^{22}\ \mathrm{cm^{-3}} = 8{,}5\times10^{28}\ \mathrm{m^{-3}}.$$
+
+<p><strong>Raio de Wigner–Seitz.</strong> Divide-se o volume igualmente entre os elétrons e pede-se o raio da esfera equivalente:</p>
+
+$$\frac{4}{3}\pi r_s^3 = \frac{1}{n}\quad\Longrightarrow\quad r_s = \left(\frac{3}{4\pi n}\right)^{1/3}.$$
+
+<p>Para o cobre, \(r_s = (3/4\pi\cdot 8{,}5\times10^{22})^{1/3} = 1{,}41\times10^{-8}\) cm \(=1{,}41\) Å, e com \(a_0 = 0{,}529\) Å:</p>
+
+$$\frac{r_s}{a_0} = 2{,}67.$$
+
+<p><strong>Por que \(r_s/a_0\) é o parâmetro certo.</strong> A energia cinética típica escala como \(\hbar^2/mr_s^2\) e a coulombiana como \(e^2/r_s\); a razão potencial/cinética é \(\propto r_s/a_0\). Nos metais esse número é de ordem 1 a 6 — ou seja, a interação <em>não</em> é pequena, e a hipótese H2 precisará de justificativa <em>a posteriori</em> (líquido de Fermi, Parte V, pergunta 7).</p>
+
+<p><strong>Ponto de arguição.</strong> A escolha de \(Z\) não é inocente: para o Cu, tomar \(Z=1\) (só o 4s) contra \(Z=11\) (incluindo o 3d) muda \(n\) por um fator 11 e \(\varepsilon_F\) por \(11^{2/3}\approx 5\). O critério é energético — a banda 3d é cheia e estreita, e por isso não contribui ao transporte.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, seção "The Basic Assumptions of the Drude Model", com a Tabela 1.1 (\(n\) e \(r_s/a_0\) de ~30 metais). · Simon, <i>Oxford Solid State Basics</i>, cap. 3.1. · Kittel, cap. 6, tabela de concentrações eletrônicas.</p>
+</details>
+
+<h3 id="b3">Bloco 3 — Condutividade DC (10–18 min)</h3>
+
+<p><strong>Dedução da equação de movimento média.</strong> Fazer com cuidado — é o passo tecnicamente mais delicado do modelo e a banca vai reparar se for pulado.</p>
+
+<p>Seja \(\mathbf{p}(t)\) o momento médio por elétron. Entre \(t\) e \(t+dt\):</p>
+<ul>
+  <li>uma fração \((1 - dt/\tau)\) não colide, e evolui para \(\mathbf{p} + \mathbf{F}dt\);</li>
+  <li>a fração \(dt/\tau\) que colide emerge com momento médio nulo, e ganha apenas \(\mathbf{F}dt\) durante o resto do intervalo — contribuição \(O(dt^2)\).</li>
+</ul>
+
+<p>Logo:</p>
+
+$$\mathbf{p}(t+dt) = \left(1-\frac{dt}{\tau}\right)\left[\mathbf{p}(t)+\mathbf{F}(t)\,dt\right] + O(dt^2)$$
+
+$$\boxed{\;\frac{d\mathbf{p}}{dt} = -\frac{\mathbf{p}}{\tau} + \mathbf{F}(t)\;}$$
+
+<details class="demo" open id="d2">
+<summary><span class="tag">D2</span> A equação de movimento pelo argumento probabilístico</summary>
+<div class="body">
+
+<p><strong>Montagem.</strong> Considere os elétrons que em \(t\) têm momento médio \(\mathbf{p}(t)\). A hipótese H4 diz: a probabilidade de colidir no intervalo \([t, t+dt]\) é \(dt/\tau\), independente de \(\mathbf{p}\), de \(\mathbf{r}\) e da história. Separe as duas populações.</p>
+
+<p><strong>(i) Os que não colidem</strong> — fração \(1 - dt/\tau\). Evoluem apenas pela força externa:</p>
+
+$$\mathbf{p}(t) \longrightarrow \mathbf{p}(t) + \mathbf{F}(t)\,dt + O(dt^2),$$
+
+<p>onde o \(O(dt^2)\) vem da variação de \(\mathbf{F}\) dentro do intervalo.</p>
+
+<p><strong>(ii) Os que colidem</strong> — fração \(dt/\tau\). Emergem da colisão com direção aleatória: a média sobre essa subpopulação é <em>nula</em>. Depois da colisão, ainda dentro do intervalo, ganham no máximo \(\mathbf{F}\,dt\). A contribuição total dessa população é, portanto,</p>
+
+$$\frac{dt}{\tau}\cdot\big[0 + O(\mathbf{F}\,dt)\big] = O(dt^2).$$
+
+<p><strong>Somando</strong> as duas com seus pesos:</p>
+
+$$\mathbf{p}(t+dt) = \left(1-\frac{dt}{\tau}\right)\big[\mathbf{p}(t)+\mathbf{F}(t)dt\big] + O(dt^2)
+= \mathbf{p}(t) - \frac{\mathbf{p}(t)}{\tau}dt + \mathbf{F}(t)\,dt + O(dt^2).$$
+
+<p>Passando \(\mathbf{p}(t)\) para a esquerda, dividindo por \(dt\) e tomando \(dt\to 0\):</p>
+
+$$\boxed{\;\frac{d\mathbf{p}}{dt} = -\frac{\mathbf{p}}{\tau} + \mathbf{F}(t)\;}$$
+
+<p><strong>Onde cada hipótese entrou.</strong> A independência de \(dt/\tau\) em relação a \(\mathbf{p}\) é o que torna o termo de perda <em>linear</em> em \(\mathbf{p}\). A isotropia pós-colisão é o que anula a média da população (ii). Sem as duas, não há termo \(-\mathbf{p}/\tau\).</p>
+
+<p><strong>Leitura física.</strong> O termo \(-\mathbf{p}/\tau\) é atrito viscoso, mas nenhum elétron individual é "freado": as colisões apagam a <em>memória</em> do momento adquirido do campo. Sem campo, \(\mathbf{p}(t) = \mathbf{p}(0)e^{-t/\tau}\) — decaimento exponencial da memória, não da energia.</p>
+
+<p><strong>Alternativa equivalente, se a banca pedir.</strong> Pesar cada elétron pelo tempo decorrido desde a última colisão, cuja distribuição é \(P(t)dt = e^{-t/\tau}dt/\tau\). Um elétron que colidiu há \(t\) carrega \(\mathbf{F}t\); a média dá \(\langle\mathbf{p}\rangle = \mathbf{F}\int_0^\infty t\,e^{-t/\tau}dt/\tau = \mathbf{F}\tau\), que é o regime estacionário da equação acima. O fato de \(\langle t\rangle = \tau\) — e não \(\tau/2\) — é a armadilha clássica dessa conta.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, seção "DC Electrical Conductivity of a Metal" — a dedução com o peso \((1-dt/\tau)\) é feita ali quase nesta forma. · A distribuição \(e^{-t/\tau}\) e o paradoxo de \(\langle t\rangle\) estão no Apêndice B do A&amp;M. · Reif, cap. 12.1 ("collision time"), para a origem cinética de \(\tau\). · Simon, cap. 3.1.</p>
+</details>
+
+<p><strong>Interpretação:</strong> o termo \(-\mathbf{p}/\tau\) é atrito viscoso. As colisões não "freiam" cada elétron individualmente — elas destroem a <em>memória</em> do momento adquirido do campo.</p>
+
+<p><strong>Regime estacionário</strong> com \(\mathbf{F} = -e\mathbf{E}\):</p>
+
+$$\mathbf{p} = -e\mathbf{E}\tau \quad\Longrightarrow\quad \mathbf{v} = -\frac{e\tau}{m}\mathbf{E}$$
+
+$$\mathbf{j} = -ne\mathbf{v} = \frac{ne^2\tau}{m}\mathbf{E} \quad\Longrightarrow\quad \boxed{\;\sigma = \frac{ne^2\tau}{m}\;,\qquad \rho = \frac{m}{ne^2\tau}\;}$$
+
+<p>Destacar: <strong>a lei de Ohm sai como consequência, não como hipótese.</strong></p>
+
+<p><strong>Extração de \(\tau\).</strong> Invertendo, \(\tau = m/(ne^2\rho)\). Para o cobre à temperatura ambiente (\(\rho \approx 1{,}7\ \mu\Omega\cdot\)cm): \(\tau \approx 2{,}5\times10^{-14}\) s. Metais típicos: \(10^{-14}\)–\(10^{-15}\) s.</p>
+
+<p><strong>O livre caminho médio — e a primeira rachadura.</strong> Com equipartição, \(\frac12 mv_0^2 = \frac32 k_BT\) dá \(v_0 \approx 10^7\) cm/s, logo \(\ell = v_0\tau \approx\) 1–10 Å. Isso é da ordem do espaçamento interiônico, e por décadas foi lido como <em>confirmação</em> de que os elétrons colidem com os íons.</p>
+
+<p>Mas: a baixas temperaturas, em amostras puras, \(\rho\) cai por ordens de grandeza e \(\ell\) atinge \(10^3\) Å ou mais — em amostras muito puras, escala de centímetros. <strong>Um elétron não pode percorrer milhares de espaçamentos atômicos se colide com os íons.</strong> A hipótese H3 está errada, e só a mecânica quântica dirá por quê (rede periódica não espalha; o espalhamento vem de impurezas, defeitos e fônons).</p>
+
+<details class="demo" open id="d3">
+<summary><span class="tag">D3</span> \(\sigma = ne^2\tau/m\), e os números do cobre</summary>
+<div class="body">
+
+<p><strong>Estacionário.</strong> Com \(\mathbf{F} = -e\mathbf{E}\) constante, faça \(d\mathbf{p}/dt = 0\) em D2:</p>
+
+$$0 = -\frac{\mathbf{p}}{\tau} - e\mathbf{E} \quad\Longrightarrow\quad \mathbf{p} = -e\tau\mathbf{E},\qquad \mathbf{v} = \frac{\mathbf{p}}{m} = -\frac{e\tau}{m}\mathbf{E}.$$
+
+<p>A densidade de corrente de \(n\) portadores de carga \(-e\) com velocidade média \(\mathbf{v}\):</p>
+
+$$\mathbf{j} = n(-e)\mathbf{v} = \frac{ne^2\tau}{m}\mathbf{E}\quad\Longrightarrow\quad \sigma = \frac{ne^2\tau}{m}.$$
+
+<p>A linearidade \(\mathbf{j}\propto\mathbf{E}\) é <em>resultado</em>, e ela decorre de uma coisa só: \(\tau\) não depende de \(\mathbf{E}\).</p>
+
+<p><strong>Extraindo \(\tau\) do cobre.</strong> Em SI, com \(n = 8{,}5\times10^{28}\) m⁻³, \(e = 1{,}602\times10^{-19}\) C, \(m = 9{,}11\times10^{-31}\) kg e \(\rho = 1{,}7\times10^{-8}\ \Omega\cdot\)m:</p>
+
+$$\tau = \frac{m}{ne^2\rho} = \frac{9{,}11\times10^{-31}}{(8{,}5\times10^{28})(1{,}602\times10^{-19})^2(1{,}7\times10^{-8})} = 2{,}5\times10^{-14}\ \mathrm{s}.$$
+
+<p><strong>Velocidade térmica clássica</strong> a 300 K, por equipartição:</p>
+
+$$v_0 = \sqrt{\frac{3k_BT}{m}} = \sqrt{\frac{3(1{,}381\times10^{-23})(300)}{9{,}11\times10^{-31}}} = 1{,}17\times10^5\ \mathrm{m/s} = 1{,}17\times10^7\ \mathrm{cm/s}.$$
+
+<p><strong>Livre caminho médio.</strong> \(\ell = v_0\tau = 2{,}9\times10^{-9}\) m \(\approx 29\) Å. O espaçamento típico é \(n^{-1/3} = 2{,}3\) Å, ou seja, \(\ell \approx 12\) espaçamentos. Uma ressalva honesta: o A&amp;M cita a faixa 1–10 Å usando \(\tau\sim10^{-14}\) s genérico; com o \(\tau\) real do Cu a conta dá algumas dezenas de ångströms. A conclusão qualitativa — "da ordem de poucos espaçamentos atômicos, logo é plausível colidir com íons" — sobrevive, e é ela que a evidência de baixa temperatura vai destruir.</p>
+
+<p><strong>O argumento que mata H3.</strong> A 4 K, um Cu de alta pureza tem \(\rho\) até \(10^{4}\)–\(10^{6}\) vezes menor. Como \(\ell\propto 1/\rho\) a \(n\) fixo, \(\ell\) chega a \(10^{-2}\) cm — \(10^5\) espaçamentos. Nenhuma escolha de seção de choque iônica produz isso: a rede <em>perfeita</em> não espalha, e a resistividade residual mede impurezas e defeitos, não íons.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, "DC Electrical Conductivity" — Tabela 1.2 (resistividades) e Tabela 1.3 (\(\tau\) a 77 K, 273 K e 373 K). A discussão de \(\ell\) e do colapso da hipótese de colisão iônica vem logo após a Tabela 1.3. · Kittel, cap. 6, "Electrical conductivity and Ohm's law", com a mesma extração numérica. · Simon, cap. 3.1.1.</p>
+</details>
+
+<div class="callout"><span class="lbl">[COMP] Condutividade AC e frequência de plasma</span>
+Com \(\mathbf{E}(t) = \mathrm{Re}(\mathbf{E}(\omega)e^{-i\omega t})\), a mesma equação dá \(\sigma(\omega) = \sigma_0/(1-i\omega\tau)\) e \(\epsilon(\omega) = 1 - \omega_p^2/\omega^2\), com \(\omega_p^2 = 4\pi ne^2/m\) (CGS). Para \(\omega < \omega_p\), \(\epsilon < 0\) e a onda é refletida; acima, o metal fica transparente. Para os alcalinos \(\hbar\omega_p \approx\) 3,7–5,9 eV — no ultravioleta, exatamente onde se observa a transparência. <strong>Este é um sucesso genuíno de Drude, que sobrevive intacto.</strong>
+</div>
+
+<details class="demo" open id="d4">
+<summary><span class="tag">D4</span> [COMP] \(\sigma(\omega)\), função dielétrica e \(\omega_p\)</summary>
+<div class="body">
+
+<p><strong>Resposta harmônica.</strong> Com \(\mathbf{E}(t)=\mathrm{Re}[\mathbf{E}(\omega)e^{-i\omega t}]\), procure \(\mathbf{p}(t)=\mathrm{Re}[\mathbf{p}(\omega)e^{-i\omega t}]\) em D2:</p>
+
+$$-i\omega\,\mathbf{p}(\omega) = -\frac{\mathbf{p}(\omega)}{\tau} - e\mathbf{E}(\omega)
+\quad\Longrightarrow\quad \mathbf{p}(\omega) = \frac{-e\mathbf{E}(\omega)}{1/\tau - i\omega}.$$
+
+<p>Com \(\mathbf{j} = -ne\mathbf{p}/m\):</p>
+
+$$\boxed{\;\sigma(\omega) = \frac{\sigma_0}{1-i\omega\tau},\qquad \sigma_0 = \frac{ne^2\tau}{m}\;}$$
+
+<p><strong>Regime de alta frequência</strong> (\(\omega\tau\gg1\), o caso óptico: \(\tau\sim10^{-14}\) s e luz visível têm \(\omega\tau\sim10\)–100). Então \(\sigma(\omega)\to i\,ne^2/m\omega\), resposta puramente reativa — o elétron oscila em quadratura, sem dissipar.</p>
+
+<p><strong>Função dielétrica.</strong> Da lei de Ampère–Maxwell em CGS, com \(\mathbf{j}=\sigma\mathbf{E}\), a resposta do meio se empacota em</p>
+
+$$\epsilon(\omega) = 1 + \frac{4\pi i \sigma(\omega)}{\omega}
+= 1 + \frac{4\pi i}{\omega}\cdot\frac{i\,ne^2}{m\omega}
+= \boxed{\;1 - \frac{\omega_p^2}{\omega^2}\;},\qquad \omega_p^2 = \frac{4\pi ne^2}{m}.$$
+
+<p><strong>Interpretação.</strong> A relação de dispersão \(\omega^2 = \omega_p^2 + c^2k^2\) mostra o corte: para \(\omega<\omega_p\), \(k\) é imaginário, o campo decai exponencialmente e a onda é refletida — é o brilho metálico. Para \(\omega>\omega_p\), \(\epsilon>0\) e o metal transmite. \(\omega_p\) também é a frequência própria de oscilação longitudinal da nuvem eletrônica contra o fundo iônico: deslocando o gás de \(x\), aparece campo restaurador \(E = 4\pi nex\) e \(m\ddot x = -4\pi ne^2 x\).</p>
+
+<p><strong>Sódio, em números</strong> (\(n = 2{,}65\times10^{22}\) cm⁻³, CGS, \(e=4{,}803\times10^{-10}\) ues):</p>
+
+$$\omega_p = \sqrt{\frac{4\pi(2{,}65\times10^{22})(4{,}803\times10^{-10})^2}{9{,}11\times10^{-28}}} = 9{,}2\times10^{15}\ \mathrm{s^{-1}},
+\qquad \hbar\omega_p \approx 6{,}0\ \mathrm{eV}.$$
+
+<p>Valor de elétrons livres, no ultravioleta — a ordem de grandeza certa para o limiar de transparência medido nos alcalinos. Confira o número tabelado na Tabela 1.5 do A&amp;M antes de escrevê-lo no quadro; a concordância é boa, não exata.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, seções "AC Electrical Conductivity of a Metal" e "The Dielectric Constant and the Plasma Frequency", com a Tabela 1.5 (\(\hbar\omega_p\) teórico × limiar observado). · Griffiths, <i>Introduction to Electrodynamics</i>, 9.4.3 ("free electron gas / plasma frequency"), se precisar reativar ondas em condutores. · Kittel, cap. 10, para plasmons.</p>
+</details>
+
+<div class="callout"><span class="lbl">[COMP] Efeito Hall</span>
+\(R_H = -1/(nec)\), independente de \(\tau\) e de \(B\). Ordem de grandeza correta para alcalinos; mas Al, Be e In têm \(R_H\) <strong>positivo</strong>. Nenhum modelo de elétrons livres explica isso — reservar para o Bloco 8.
+</div>
+
+<details class="demo" open id="d5">
+<summary><span class="tag">D5</span> [COMP] Coeficiente Hall \(R_H = -1/nec\)</summary>
+<div class="body">
+
+<p><strong>Montagem.</strong> Corrente ao longo de \(x\), campo magnético \(\mathbf{B}=B\hat{z}\). A força de Lorentz empurra os portadores para \(y\); carga se acumula nas faces até que o campo transverso \(E_y\) cancele o empurrão. No estacionário, \(j_y = 0\).</p>
+
+<p>Com \(\mathbf{F} = -e(\mathbf{E} + \mathbf{v}\times\mathbf{B}/c)\) em D2 e \(d\mathbf{p}/dt = 0\):</p>
+
+$$0 = -e\left(E_x + \frac{p_y B}{mc}\right) - \frac{p_x}{\tau},\qquad
+0 = -e\left(E_y - \frac{p_x B}{mc}\right) - \frac{p_y}{\tau}.$$
+
+<p>Definindo a frequência de cíclotron \(\omega_c = eB/mc\) e usando \(j_{x,y} = -nep_{x,y}/m\), multiplique por \(-ne\tau/m\):</p>
+
+$$\sigma_0 E_x = \omega_c\tau\, j_y + j_x,\qquad \sigma_0 E_y = -\omega_c\tau\, j_x + j_y.$$
+
+<p><strong>Impondo \(j_y = 0\):</strong></p>
+
+$$E_y = -\frac{\omega_c\tau}{\sigma_0}j_x = -\frac{eB\tau}{mc}\cdot\frac{m}{ne^2\tau}\,j_x = -\frac{B}{nec}\,j_x,$$
+
+$$\boxed{\;R_H \equiv \frac{E_y}{j_x B} = -\frac{1}{nec}\;}$$
+
+<p><strong>Por que o resultado é tão forte.</strong> \(\tau\) cancelou, \(m\) cancelou, \(B\) cancelou. Sobra apenas \(n\) e o <em>sinal</em> da carga. É, portanto, um teste limpo do modelo: mede-se \(R_H\) e lê-se a densidade de portadores. Nos alcalinos, \(R_H\) medido concorda com \(-1/nec\) dentro de ~10–20%.</p>
+
+<p><strong>E é exatamente por isso que a falha dói.</strong> Al, Be, In e Cd têm \(R_H > 0\). Nenhum parâmetro ajustável do modelo pode produzir isso — o sinal está amarrado à carga do portador. A saída exige bandas: perto do topo de uma banda quase cheia, \(m^*<0\) e os portadores efetivos são buracos. Guardar a munição para o Bloco 8.</p>
+
+<p><strong>Nota.</strong> A dependência em \(B\) só entra via \(\omega_c\tau\), que a \(B\sim 1\) T e \(\tau\sim10^{-14}\) s vale \(\sim10^{-3}\): o regime usual é \(\omega_c\tau\ll1\). O modelo também prevê magnetorresistência <em>nula</em>, outra falha com o experimento.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, seção "Hall Effect and Magnetoresistance" — inclui a Tabela 1.4 com \(-1/R_Hnec\) medido, onde os sinais anômalos aparecem explicitamente. · Simon, cap. 3.1.2. · Kittel, cap. 6, "Motion in magnetic fields".</p>
+</details>
+
+<h3 id="b4">Bloco 4 — Condução térmica e Wiedemann–Franz (18–25 min)</h3>
+
+<p><strong>Argumento cinético.</strong> Numa barra com gradiente \(\nabla T\), um elétron que chega a \(x\) veio, em média, de \(x\mp v\tau\), carregando a energia térmica característica daquele ponto. Fazendo a média sobre direções (fator 1/3 em três dimensões):</p>
+
+$$\boxed{\;\kappa = \frac{1}{3}v^2\tau\, c_v\;}$$
+
+<p>Vale a pena deduzir isso no quadro em vez de citá-lo — a banca de matéria condensada vai querer ver o argumento de meio-caminho-livre.</p>
+
+<details class="demo" open id="d6">
+<summary><span class="tag">D6</span> \(\kappa = \frac13 v^2\tau c_v\) pelo meio caminho livre</summary>
+<div class="body">
+
+<p><strong>Primeiro em uma dimensão.</strong> Considere o plano \(x\). Metade dos elétrons que o cruzam vem da esquerda, metade da direita. Pela hipótese H4, cada um teve sua última colisão a uma distância média \(v\tau\), e emergiu dela em equilíbrio térmico <em>local</em>, carregando a energia por elétron \(\mathcal{E}(T)\) do ponto de origem.</p>
+
+<p>Fluxo de energia (densidade \(n\), metade em cada sentido, velocidade \(v\)):</p>
+
+$$j^q = \frac{1}{2}nv\big[\mathcal{E}(T(x-v\tau)) - \mathcal{E}(T(x+v\tau))\big].$$
+
+<p>Expandindo para \(v\tau\) pequeno face à escala de variação de \(T\):</p>
+
+$$\mathcal{E}(T(x\mp v\tau)) \approx \mathcal{E}(T(x)) \mp v\tau\frac{d\mathcal{E}}{dT}\frac{dT}{dx},$$
+
+$$j^q = \frac{1}{2}nv\left(-2v\tau\frac{d\mathcal{E}}{dT}\frac{dT}{dx}\right) = -nv^2\tau\frac{d\mathcal{E}}{dT}\frac{dT}{dx}.$$
+
+<p>Como \(n\,d\mathcal{E}/dT = c_v\) (calor específico por volume), o resultado unidimensional é \(\kappa_{1D} = v^2\tau c_v\).</p>
+
+<p><strong>Agora em três dimensões.</strong> A propagação é isotrópica: o que interessa é a componente da velocidade ao longo do gradiente, e o deslocamento na direção \(x\) é \(v_x\tau\). Repetindo a conta com \(v_x\) no lugar de \(v\) aparece \(\langle v_x^2\rangle\), e por isotropia</p>
+
+$$\langle v_x^2\rangle = \langle v_y^2\rangle = \langle v_z^2\rangle = \tfrac13\langle v^2\rangle.$$
+
+<p>Portanto</p>
+
+$$\boxed{\;\kappa = \frac{1}{3}\langle v^2\rangle\,\tau\,c_v\;}$$
+
+<p>É daí que vem o 1/3 — não de simetria vaga, mas da média angular de \(v_x^2\). (Na forma de Reif, \(\kappa=\frac13\bar v\,\ell\,c_v\), com \(\ell = \bar v\tau\); a diferença entre \(\langle v^2\rangle\) e \(\bar v^2\) é um fator numérico de ordem 1 que uma teoria cinética elementar não fixa.)</p>
+
+<p><strong>Três ressalvas que a banca pode cobrar.</strong> (i) O argumento pressupõe \(\ell\) muito menor que a escala de variação de \(T\) — transporte difusivo, não balístico. (ii) O mesmo \(\tau\) é usado para carga e calor, o que exige espalhamento elástico (veja Parte V, pergunta 3). (iii) Há um fluxo de partículas líquido acompanhando o de energia; num tratamento completo, ele é cancelado pelo campo termoelétrico, e é justamente esse campo que produz \(Q\) no bloco seguinte.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Reif, <i>Fundamentals of Statistical and Thermal Physics</i>, cap. 12 — 12.1 (tempo de colisão) e 12.4 (condutividade térmica); é ali que o fator 1/3 é obtido com cuidado, e não nos livros de estado sólido, que o citam pronto. · Ashcroft &amp; Mermin, cap. 1, seção "Thermal Conductivity of a Metal", versão compacta do mesmo argumento. · Kittel, cap. 5, para a versão fonônica idêntica em estrutura.</p>
+</details>
+
+<p><strong>Inserindo os ingredientes clássicos:</strong> \(c_v = \frac32 nk_B\) e \(v^2 = 3k_BT/m\):</p>
+
+$$\kappa = \frac{1}{3}\cdot\frac{3k_BT}{m}\cdot\tau\cdot\frac{3}{2}nk_B = \frac{3}{2}\frac{nk_B^2\tau T}{m}$$
+
+<p><strong>Dividindo por \(\sigma T\)</strong> — e aqui está o ponto alto do modelo — <strong>\(\tau\), \(n\) e \(m\) cancelam simultaneamente:</strong></p>
+
+$$\frac{\kappa}{\sigma T} = \frac{3}{2}\left(\frac{k_B}{e}\right)^2 = 1{,}11\times10^{-8}\ \mathrm{W\cdot\Omega/K^2}$$
+
+<p>Uma constante universal, sem parâmetros ajustáveis. <strong>Isso responde à pergunta que abriu a aula.</strong> Sublinhar o que torna o resultado tão robusto: o mesmo \(\tau\) e os mesmos portadores transportam carga e calor, então a razão não depende deles.</p>
+
+<details class="demo" open id="d7">
+<summary><span class="tag">D7</span> A razão de Wiedemann–Franz clássica</summary>
+<div class="body">
+
+<p><strong>Ingredientes clássicos.</strong> Gás ideal monoatômico de \(n\) elétrons por volume: equipartição dá \(\frac12 m\langle v^2\rangle = \frac32 k_BT\), ou seja \(\langle v^2\rangle = 3k_BT/m\), e \(c_v = \frac32 nk_B\).</p>
+
+<p><strong>Em \(\kappa\):</strong></p>
+
+$$\kappa = \frac13\left(\frac{3k_BT}{m}\right)\tau\left(\frac32 nk_B\right) = \frac{3}{2}\,\frac{nk_B^2\tau T}{m}.$$
+
+<p><strong>Dividindo por \(\sigma T = ne^2\tau T/m\):</strong></p>
+
+$$\frac{\kappa}{\sigma T} = \frac{\frac32 nk_B^2\tau T/m}{ne^2\tau T/m} = \frac{3}{2}\left(\frac{k_B}{e}\right)^2.$$
+
+<p>Cancelaram \(n\), \(\tau\), \(m\) e \(T\) — toda a física de material some. Numericamente, com \(k_B/e = 8{,}62\times10^{-5}\) V/K:</p>
+
+$$L_{cl} = \frac32(8{,}62\times10^{-5})^2 = 1{,}11\times10^{-8}\ \mathrm{W\cdot\Omega/K^2}.$$
+
+<p><strong>Confronto.</strong> \(L\) medido fica em 2,2–2,7 \(\times10^{-8}\) W·Ω/K² para os metais bons à temperatura ambiente. Erro de um fator \(\approx 2\) — ridiculamente bom para um modelo que erra \(c_v\) por 100, e a explicação disso é o Bloco 7.</p>
+
+<p><strong>A estrutura do argumento, que é o que sobrevive.</strong> A razão só é universal porque (a) os mesmos portadores carregam carga e calor, (b) com o mesmo \(\tau\), e (c) \(\kappa\) e \(\sigma\) dependem de \(\tau\) linearmente e da mesma maneira. Essas três condições continuam valendo em Sommerfeld — muda só o que se põe em \(c_v\) e \(\langle v^2\rangle\). Por isso a forma da lei sobrevive e apenas a constante muda.</p>
+
+<p><strong>Nota histórica.</strong> Drude cometeu um erro de fator 2 (escreveu \(\sigma\) com metade do valor) e publicou \(L\approx 2{,}2\times10^{-8}\), em concordância aparentemente espetacular. O acordo real é o fator 2 acima.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, seção "Thermal Conductivity of a Metal", com a Tabela 1.6 (números de Lorenz medidos a 273 K e 373 K) e a nota de rodapé sobre o erro de fator 2 de Drude. · Simon, cap. 3.2, que é onde a narrativa do acordo acidental é melhor contada. · Kittel, cap. 6, "Wiedemann–Franz law".</p>
+</details>
+
+<p><strong>Confronto com o experimento:</strong> \(L\) medido \(\approx\) 2,2–2,7 \(\times10^{-8}\) W·Ω/K². O valor clássico erra por um fator ~2.</p>
+
+<p><strong>Nota histórica (contar — a banca gosta, e é honesto):</strong> Drude cometeu um erro de fator 2 e publicou \(L \approx 2{,}2\times10^{-8}\), em concordância aparentemente espetacular. O acordo real é bem mais modesto — mas, mesmo assim, notável para um modelo tão cru.</p>
+
+<h3 id="b5">Bloco 5 — A crise (25–30 min)</h3>
+
+<p>Se Drude estivesse certo, o gás de elétrons contribuiria com \(\frac32 nk_B\) para o calor específico do metal, <strong>além</strong> dos \(3nk_B\) da rede. Metais teriam calor específico ~50% maior que isolantes.</p>
+
+<p><strong>Não é o que se mede.</strong> Metais obedecem Dulong–Petit tão bem quanto isolantes. A contribuição eletrônica medida à temperatura ambiente é ~100 vezes menor que a prevista.</p>
+
+<p>Segundo desastre — <strong>poder termoelétrico</strong>. O modelo prevê:</p>
+
+$$Q = -\frac{c_v}{3ne} = -\frac{k_B}{2e} \approx -43\ \mu\mathrm{V/K}$$
+
+<p>Mede-se da ordem de μV/K. Novamente <strong>duas ordens de grandeza</strong> de erro.</p>
+
+<details class="demo" open id="d8">
+<summary><span class="tag">D8</span> Poder termoelétrico \(Q = -c_v/3ne\)</summary>
+<div class="body">
+
+<p><strong>A ideia.</strong> Num gradiente de temperatura sem corrente, dois efeitos se equilibram: a difusão térmica empurra elétrons do lado quente para o frio, e o campo elétrico que essa separação de carga cria empurra de volta. \(Q\) é definido por \(\mathbf{E} = Q\nabla T\) na condição \(\mathbf{j}=0\).</p>
+
+<p><strong>Velocidade de difusão térmica.</strong> Mesmo argumento de meio caminho livre de D6, agora aplicado à <em>velocidade</em> em vez da energia. Em 1D, elétrons chegando a \(x\) vindos de \(x\mp v\tau\) contribuem com \(\pm v(T(x\mp v\tau))\), e a média não se anula porque \(v\) depende de \(T\):</p>
+
+$$v_Q = \frac12\big[v(T(x-v\tau)) - v(T(x+v\tau))\big] = -\tau v\frac{dv}{dT}\frac{dT}{dx} = -\frac{\tau}{2}\frac{d(v^2)}{dT}\frac{dT}{dx}.$$
+
+<p>Em três dimensões, cada componente entra com \(\langle v_x^2\rangle = \frac13\langle v^2\rangle\):</p>
+
+$$\mathbf{v}_Q = -\frac{\tau}{6}\frac{d\langle v^2\rangle}{dT}\nabla T.$$
+
+<p><strong>Velocidade de deriva do campo</strong>, de D3: \(\mathbf{v}_E = -e\tau\mathbf{E}/m\).</p>
+
+<p><strong>Impondo \(\mathbf{v}_Q + \mathbf{v}_E = 0\):</strong></p>
+
+$$\mathbf{E} = -\frac{m}{e\tau}\mathbf{v}_Q = \frac{1}{6e}\frac{d\langle m v^2\rangle}{dT}\nabla T
+\;\Longrightarrow\;
+Q = -\frac{1}{3e}\frac{d}{dT}\left(\frac{m\langle v^2\rangle}{2}\right) = -\frac{c_v}{3ne},$$
+
+<p>onde na última passagem usei que \(\frac12 m\langle v^2\rangle\) é a energia térmica por elétron, cuja derivada em \(T\) é \(c_v/n\). (O sinal negativo global vem da carga \(-e\); acompanhe-o com cuidado no quadro, é onde se erra.)</p>
+
+<p><strong>Número clássico.</strong> Com \(c_v = \frac32 nk_B\):</p>
+
+$$Q = -\frac{3nk_B/2}{3ne} = -\frac{k_B}{2e} = -\frac{8{,}62\times10^{-5}}{2}\ \mathrm{V/K} = -43\ \mu\mathrm{V/K}.$$
+
+<p><strong>Por que esta falha é mais grave que a de \(c_v\).</strong> \(Q\) é proporcional a \(c_v\) e <em>não</em> contém \(\langle v^2\rangle\) — não há nada para cancelar o erro. Medem-se valores da ordem de μV/K, cem vezes menores. Este é o teste que Wiedemann–Franz não dá: expõe \(c_v\) sozinho.</p>
+
+<p><strong>Adiantando o desfecho:</strong> em Sommerfeld, trocar \(c_v\) pelo valor degenerado dá \(Q = -\frac{\pi^2}{6}\frac{k_B}{e}\frac{k_BT}{\varepsilon_F}\), suprimido pelo mesmo fator \(T/T_F\) e agora da ordem certa.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 1, seção "Thermoelectric Effects" (fecho do capítulo), e a correção de Sommerfeld no fim do cap. 2. · Ashcroft &amp; Mermin, cap. 13, para o tratamento via equação de Boltzmann, se a banca quiser rigor. · Kittel, cap. 6, tem só a versão quântica do resultado.</p>
+</details>
+
+<div class="callout q"><span class="lbl">[Q] Pergunta à turma</span>
+O mesmo modelo acerta \(\kappa/\sigma T\) dentro de um fator 2 e erra \(c_v\) por um fator 100. Como isso é possível, se \(\kappa\) foi calculado usando exatamente esse \(c_v\)?
+</div>
+
+<p>Deixar a pergunta no ar. Anunciar: a resposta é o coração da aula, e chega no Bloco 7.</p>
+
+<p><strong>Diagnóstico.</strong> O problema não está nas hipóteses de elétrons livres e independentes — está na <strong>estatística</strong>. Drude aplicou Maxwell–Boltzmann a um gás mil vezes mais denso que um gás ordinário, feito de férmions idênticos. O princípio de exclusão foi ignorado — em 1900, ele não existia.</p>
+
+<details class="demo" open id="d9">
+<summary><span class="tag">D9</span> O critério de degenerescência \(n\lambda^3\)</summary>
+<div class="body">
+
+<p><strong>Por que vale a pena.</strong> "\(T\ll T_F\)" é uma comparação <em>a posteriori</em> — só faz sentido depois de já ter feito Sommerfeld. O critério \(n\lambda^3\ll1\) é a condição de validade da <em>própria</em> Maxwell–Boltzmann, e permite dizer, já no Bloco 5, que Drude violou uma hipótese identificável. Uma linha de quadro, alto retorno.</p>
+
+<p><strong>De onde vem.</strong> No grande canônico clássico, \(\ln\Xi_{cl} = zZ_1\) com \(z=e^{\beta\mu}\) e \(Z_1=\sum_j e^{-\beta\varepsilon_j}\). Como \(N = z\,\partial\ln\Xi/\partial z\), sai \(z = N/Z_1\). Com \(Z_1 = V/\lambda^3\) e</p>
+
+$$\lambda = \frac{h}{\sqrt{2\pi mk_BT}}\quad\text{(comprimento de onda térmico de de Broglie)},$$
+
+<p>obtém-se \(z = n\lambda^3\). E o limite clássico da Fermi–Dirac, \(f(\varepsilon) = 1/(z^{-1}e^{\beta\varepsilon}+1) \to z\,e^{-\beta\varepsilon}\), exige exatamente \(z\ll1\). Portanto:</p>
+
+$$\boxed{\;\text{Maxwell–Boltzmann válida} \iff n\lambda^3 \ll 1 \iff \lambda \ll n^{-1/3}\;}$$
+
+<p>A leitura geométrica é imediata: enquanto o pacote de onda for menor que a separação média, cada partícula é rastreável e a indistinguibilidade não tem consequência física.</p>
+
+<p><strong>Os números (conferidos).</strong> A 300 K, \(\lambda_{e} = h/\sqrt{2\pi m k_B T} = 43\) Å.</p>
+
+<table>
+<thead><tr><th>Sistema</th><th>\(\lambda\)</th><th>\(n\)</th><th>\(n\lambda^3\)</th></tr></thead>
+<tbody>
+<tr><td>Elétrons no Cu, 300 K</td><td>43 Å</td><td>\(8{,}5\times10^{22}\) cm⁻³</td><td><b>\(6{,}7\times10^{3}\)</b></td></tr>
+<tr><td>Ar, CNTP</td><td>0,19 Å</td><td>\(2{,}7\times10^{19}\) cm⁻³</td><td><b>\(1{,}9\times10^{-7}\)</b></td></tr>
+</tbody>
+</table>
+
+<p>Dez ordens de grandeza separam os dois casos. Drude não aplicou uma aproximação ruim: aplicou uma aproximação <em>violada por quatro ordens de grandeza</em>.</p>
+
+<p><strong>Relação exata com \(T_F\)</strong> (usando \(n=k_F^3/3\pi^2\) e \(\varepsilon_F=\hbar^2k_F^2/2m\)):</p>
+
+$$n\lambda^3 = \frac{8}{3\sqrt{\pi}}\left(\frac{T_F}{T}\right)^{3/2} \approx 1{,}50\left(\frac{T_F}{T}\right)^{3/2}.$$
+
+<p>Ou seja: \(n\lambda^3\gg1\) e \(T\ll T_F\) são o mesmo enunciado. Bom ponto de arguição — Drude e Sommerfeld são os dois limites (\(z\to0\) e \(z\to\infty\)) do mesmo gás ideal quântico.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Salinas, <i>Introdução à Física Estatística</i>, cap. 8 — o limite clássico, a inversão \(\mu\to N\) e o parâmetro \(n\lambda^3\) estão todos ali, em português e com a notação que uma banca brasileira reconhece. · Reif, cap. 9.9 e 9.10 ("the classical limit"), para a mesma discussão. · Ashcroft &amp; Mermin menciona a comparação apenas via \(T/T_F\), no cap. 2.</p>
+</details>
+
+<h3 id="b6">Bloco 6 — A teoria de Sommerfeld (30–38 min)</h3>
+
+<p>Sommerfeld (1928): <strong>mantém H1–H4 intactas; troca apenas a distribuição de velocidades de Maxwell–Boltzmann por Fermi–Dirac.</strong></p>
+
+<details class="demo" id="d10">
+<summary><span class="tag">D10</span> Fermi–Dirac a partir do grande canônico <em>(pré-requisito — não vai ao quadro)</em></summary>
+<div class="body">
+
+<p><strong>Por que o grande canônico é obrigatório.</strong> O estado do gás ideal quântico é especificado pelos números de ocupação \(\{n_j\}\), com \(E\{n_j\}=\sum_j\varepsilon_jn_j\) e \(N\{n_j\}=\sum_jn_j\). No canônico, a soma sobre \(\{n_j\}\) carrega o vínculo \(\sum_jn_j=N\): <strong>o vínculo acopla os orbitais e a soma não fatoriza.</strong> No grande canônico o vínculo desaparece:</p>
+
+$$\Xi = \sum_{\{n_j\}}e^{-\beta\sum_j(\varepsilon_j-\mu)n_j} = \prod_j\left[\sum_{n_j}e^{-\beta(\varepsilon_j-\mu)n_j}\right].$$
+
+<p>Cada orbital vira um problema independente. Essa fatorização é a razão de ser do método.</p>
+
+<p><strong>Fermi–Dirac.</strong> Pauli restringe \(n_j\in\{0,1\}\), então a soma interna tem dois termos:</p>
+
+$$\Xi_j = 1 + e^{-\beta(\varepsilon_j-\mu)},\qquad
+\langle n_j\rangle = -\frac{1}{\beta}\frac{\partial\ln\Xi_j}{\partial\varepsilon_j}
+= \boxed{\;\frac{1}{e^{\beta(\varepsilon_j-\mu)}+1}\;}$$
+
+<p>O "+1" no denominador <em>é</em> Pauli — é ele que impede \(f>1\). Trocando por \(-1\) sai Bose; omitindo, sai Maxwell–Boltzmann.</p>
+
+<p><strong>\(\mu\) e a leitura de \(T=0\).</strong> Quando \(\beta\to\infty\), \(f\) vira um degrau em \(\mu\): todos os estados abaixo cheios, todos acima vazios. Logo \(\mu(T=0)=\varepsilon_F\), o estado vazio de menor energia. Seguir a convenção do A&amp;M: \(\varepsilon_F\) é quantidade de temperatura zero, \(\mu(T)\) para \(T>0\).</p>
+
+<p><strong>Por que \(\mu\) decresce com \(T\).</strong> Como \(g(\varepsilon)\propto\sqrt{\varepsilon}\), há mais estados acima de \(\varepsilon_F\) do que abaixo. Com \(\mu\) parado, o alargamento térmico simétrico promoveria mais elétrons para cima do que buracos deixados abaixo, e \(\langle N\rangle\) cresceria. Para conservar \(N\), \(\mu\) recua. O corolário é elegante: o sinal de \(d\mu/dT\) é dado pela inclinação de \(g\) em \(\varepsilon_F\).</p>
+
+<p><strong>E por que \(\mu<0\) num gás clássico.</strong> \(\mu\) é energia livre, não energia: num gás diluído, o ganho entrópico de acrescentar uma partícula supera o custo energético. Num metal os estados baixos estão tomados, a partícula nova vai para o topo, e \(\mu\approx +7\) eV no Cu. O sinal de \(\mu\) é diagnóstico de degenerescência.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Salinas, cap. 8 (formulação no grande canônico, fatorização, gás ideal de Fermi) — a referência em português. · Reif, caps. 9.1–9.6, para a mesma dedução com mais discussão física. · Ashcroft &amp; Mermin, cap. 2, obtém \(f\) por um argumento combinatório alternativo e discute \(\mu\) vs. \(\varepsilon_F\) explicitamente.</p>
+</details>
+
+<p><strong>Estados de uma partícula.</strong> Elétron livre em caixa de volume \(V=L^3\), com condições de contorno periódicas de Born–von Karman:</p>
+
+$$\psi_\mathbf{k}(\mathbf{r}) = \frac{1}{\sqrt{V}}e^{i\mathbf{k}\cdot\mathbf{r}},\qquad \varepsilon(\mathbf{k}) = \frac{\hbar^2k^2}{2m},\qquad k_i = \frac{2\pi n_i}{L}$$
+
+<p>Cada estado \(\mathbf{k}\) ocupa volume \((2\pi/L)^3 = 8\pi^3/V\) no espaço recíproco.</p>
+
+<p><strong>Estado fundamental: a esfera de Fermi.</strong> Preenchem-se os estados de menor energia respeitando Pauli, dois elétrons (spin ↑↓) por \(\mathbf{k}\). O resultado é uma esfera de raio \(k_F\):</p>
+
+$$N = 2\cdot\frac{\tfrac{4}{3}\pi k_F^3}{8\pi^3/V} = \frac{k_F^3}{3\pi^2}V \quad\Longrightarrow\quad \boxed{\;n = \frac{k_F^3}{3\pi^2}\;,\qquad k_F = (3\pi^2 n)^{1/3}\;}$$
+
+<details class="demo" open id="d11">
+<summary><span class="tag">D11</span> Contagem de estados e \(n = k_F^3/3\pi^2\)</summary>
+<div class="body">
+
+<p><strong>Quantização dos \(\mathbf{k}\).</strong> Born–von Karman impõe \(\psi(\mathbf{r}+L\hat{x}) = \psi(\mathbf{r})\), e idem para \(\hat y,\hat z\). Com \(\psi_\mathbf{k}\propto e^{i\mathbf{k}\cdot\mathbf{r}}\) isso exige \(e^{ik_xL}=1\), logo</p>
+
+$$k_i = \frac{2\pi n_i}{L},\qquad n_i\in\mathbb{Z}.$$
+
+<p>Os \(\mathbf{k}\) permitidos formam uma rede cúbica de passo \(2\pi/L\): cada estado ocupa volume \((2\pi/L)^3 = 8\pi^3/V\) no espaço recíproco. <strong>É essa densidade uniforme de pontos que converte somas em integrais</strong>, via \(\sum_\mathbf{k}\to \frac{V}{8\pi^3}\int d^3k\).</p>
+
+<p><strong>Preenchendo o estado fundamental.</strong> Ordene por \(\varepsilon = \hbar^2k^2/2m\) e vá ocupando de baixo para cima, com dois elétrons (spin ↑↓) por \(\mathbf{k}\). Como \(\varepsilon\) só depende de \(|k|\), a região ocupada é uma esfera de raio \(k_F\). Para \(N\) grande, o número de pontos dentro dela é o volume da esfera dividido pelo volume por ponto:</p>
+
+$$N = 2\cdot\frac{\frac43\pi k_F^3}{8\pi^3/V} = \frac{V k_F^3}{3\pi^2}
+\quad\Longrightarrow\quad n = \frac{k_F^3}{3\pi^2},\qquad k_F = (3\pi^2n)^{1/3}.$$
+
+<p><strong>Por que condições periódicas.</strong> Propriedades de bulk não podem depender da escolha: paredes rígidas diferem por efeitos de superfície \(O(N^{2/3}/N)\). As periódicas dão ondas planas propagantes, com \(\mathbf{k}\) bem definido — indispensável para falar de corrente; as rígidas dariam ondas estacionárias, que não carregam corrente individualmente. A densidade de estados no limite termodinâmico é a mesma. (Com paredes rígidas, \(k_i=\pi n_i/L\) com \(n_i>0\): o passo cai pela metade mas só um octante é permitido — os fatores se compensam exatamente.)</p>
+
+<p><strong>Cheque de consistência.</strong> \(k_F\) depende só de \(n\): geometria pura, nenhuma dinâmica. A massa entra depois, ao converter \(k_F\) em energia.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 2, seções "The Sommerfeld Theory of Metals" e "The Ground-State Properties of the Electron Gas" — inclui a discussão explícita de por que Born–von Karman. · Kittel, cap. 6, "Free electron gas in three dimensions". · Simon, cap. 4.1. · Salinas, cap. 8, para a mesma contagem em linguagem estatística.</p>
+</details>
+
+<p><strong>Os três números que mudam tudo</strong> — calcular para o cobre no quadro:</p>
+
+$$\varepsilon_F = \frac{\hbar^2k_F^2}{2m} \approx 7{,}0\ \mathrm{eV}$$
+
+$$T_F = \frac{\varepsilon_F}{k_B} \approx 8{,}2\times10^4\ \mathrm{K}$$
+
+$$v_F = \frac{\hbar k_F}{m} \approx 1{,}6\times10^8\ \mathrm{cm/s}\ \ (\sim 0{,}5\%\ \text{de } c)$$
+
+<details class="demo" open id="d12">
+<summary><span class="tag">D12</span> As quatro escalas do cobre, a partir de \(\rho_m\), \(A\) e \(Z\)</summary>
+<div class="body">
+
+<p>A cadeia completa, do dado tabelado ao número no quadro. Vale treinar até sair em três minutos, porque é exatamente isso que se faz ao vivo.</p>
+
+<p><strong>1. Densidade</strong> (D1): \(n = 8{,}5\times10^{28}\) m⁻³.</p>
+
+<p><strong>2. Vetor de onda de Fermi:</strong></p>
+
+$$k_F = (3\pi^2n)^{1/3} = \left(3\pi^2\cdot 8{,}5\times10^{28}\right)^{1/3} = (2{,}52\times10^{30})^{1/3} = 1{,}36\times10^{10}\ \mathrm{m^{-1}} = 1{,}36\ \text{Å}^{-1}.$$
+
+<p><strong>3. Energia de Fermi:</strong></p>
+
+$$\varepsilon_F = \frac{\hbar^2k_F^2}{2m} = \frac{(1{,}055\times10^{-34})^2(1{,}36\times10^{10})^2}{2(9{,}11\times10^{-31})} = 1{,}13\times10^{-18}\ \mathrm{J} = 7{,}0\ \mathrm{eV}.$$
+
+<p><strong>4. Temperatura de Fermi:</strong></p>
+
+$$T_F = \frac{\varepsilon_F}{k_B} = \frac{1{,}13\times10^{-18}}{1{,}381\times10^{-23}} = 8{,}2\times10^{4}\ \mathrm{K}.$$
+
+<p><strong>5. Velocidade de Fermi:</strong></p>
+
+$$v_F = \frac{\hbar k_F}{m} = \frac{(1{,}055\times10^{-34})(1{,}36\times10^{10})}{9{,}11\times10^{-31}} = 1{,}57\times10^{6}\ \mathrm{m/s} = 1{,}57\times10^{8}\ \mathrm{cm/s},$$
+
+<p>isto é, \(v_F/c \approx 0{,}5\%\).</p>
+
+<p><strong>Atalho útil para conferir de cabeça:</strong> \(\varepsilon_F = \dfrac{50{,}1\ \mathrm{eV}}{(r_s/a_0)^2}\). Para o Cu, \(r_s/a_0=2{,}67\): \(50{,}1/7{,}13 = 7{,}0\) eV. Confere.</p>
+
+<p><strong>Livre caminho médio revisado.</strong> Agora \(\ell = v_F\tau = (1{,}57\times10^6)(2{,}5\times10^{-14}) = 3{,}9\times10^{-8}\) m \(\approx 390\) Å — cerca de 170 espaçamentos atômicos. O A&amp;M cita \(\sim100\) Å como ordem de grandeza genérica (usando \(\tau\sim10^{-14}\) s); com o \(\tau\) real do Cu o número é algumas centenas. De qualquer modo, o argumento fica ainda mais forte que em Drude: os íons da rede <em>não</em> podem ser os centros espalhadores.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 2, Tabela 2.1 (\(r_s/a_0\), \(\varepsilon_F\), \(T_F\), \(k_F\), \(v_F\) para ~30 metais) — leve impressa; o atalho \(\varepsilon_F = 50{,}1\,\mathrm{eV}/(r_s/a_0)^2\) está nesse mesmo trecho. · Kittel, cap. 6, tabela equivalente. · Simon, cap. 4.1.</p>
+</details>
+
+<p><strong>Insistir nesta desigualdade — é a chave conceitual da aula:</strong></p>
+
+$$T_{\text{ambiente}} \approx 300\ \mathrm{K} \ll T_F \approx 10^4\text{–}10^5\ \mathrm{K}$$
+
+<p>O gás de elétrons de um metal está, à temperatura ambiente, essencialmente no seu <strong>estado fundamental</strong>. É um gás <strong>fortemente degenerado</strong>, e não um gás clássico morno. A temperatura ambiente é, para os elétrons de condução, uma temperatura <em>baixíssima</em>.</p>
+
+<p><strong>Consequência imediata:</strong> apenas os elétrons numa casca de espessura \(\sim k_BT\) em torno de \(\varepsilon_F\) — uma fração \(\sim T/T_F \sim 1\%\) do total — têm estados vazios acessíveis e podem ser excitados termicamente. <strong>O restante está congelado por Pauli.</strong> Todos os erros de fator 100 de Drude vêm de contar os elétrons errados.</p>
+
+<p>Repare também: \(v_F\) <strong>não depende da temperatura</strong> e é ~100 vezes maior que a estimativa clássica de Drude. Isso corrige \(\ell = v_F\tau\) para ~100 Å à temperatura ambiente — ainda dezenas de espaçamentos atômicos, reforçando que os íons da rede não são os centros espalhadores.</p>
+
+<p><strong>Densidade de estados</strong> (necessária no bloco seguinte):</p>
+
+$$g(\varepsilon) = \frac{1}{2\pi^2}\left(\frac{2m}{\hbar^2}\right)^{3/2}\sqrt{\varepsilon} \quad\Longrightarrow\quad g(\varepsilon_F) = \frac{3n}{2\varepsilon_F}$$
+
+<details class="demo" open id="d13">
+<summary><span class="tag">D13</span> Densidade de estados e \(g(\varepsilon_F) = 3n/2\varepsilon_F\)</summary>
+<div class="body">
+
+<p><strong>Caminho curto.</strong> A contagem de D11 vale para qualquer raio \(k\), não só \(k_F\). O número de elétrons por volume em estados com energia até \(\varepsilon\) é</p>
+
+$$n(\varepsilon) = \frac{k^3}{3\pi^2}\bigg|_{k=\sqrt{2m\varepsilon}/\hbar} = \frac{1}{3\pi^2}\left(\frac{2m\varepsilon}{\hbar^2}\right)^{3/2}.$$
+
+<p>A densidade de estados por volume e por energia é a derivada:</p>
+
+$$g(\varepsilon) = \frac{dn}{d\varepsilon} = \frac{1}{3\pi^2}\cdot\frac{3}{2}\left(\frac{2m}{\hbar^2}\right)^{3/2}\varepsilon^{1/2}
+= \boxed{\;\frac{1}{2\pi^2}\left(\frac{2m}{\hbar^2}\right)^{3/2}\sqrt{\varepsilon}\;}\quad (\varepsilon>0).$$
+
+<p><strong>Caminho longo</strong>, se a banca quiser ver a conversão soma → integral explicitamente:</p>
+
+$$\frac{1}{V}\sum_{\mathbf{k}\sigma}F(\varepsilon_\mathbf{k}) = \frac{2}{8\pi^3}\int d^3k\,F(\varepsilon_\mathbf{k})
+= \frac{1}{\pi^2}\int_0^\infty k^2\,F\!\left(\frac{\hbar^2k^2}{2m}\right)dk \equiv \int_0^\infty g(\varepsilon)F(\varepsilon)\,d\varepsilon,$$
+
+<p>e a troca de variável \(k\to\varepsilon\), com \(k=\sqrt{2m\varepsilon}/\hbar\) e \(dk = \sqrt{m/2\varepsilon}\,d\varepsilon/\hbar\), devolve o mesmo \(g(\varepsilon)\). O \(\sqrt{\varepsilon}\) é puramente geométrico: é a área da esfera \(4\pi k^2\) vezes o jacobiano \(dk/d\varepsilon\), em 3D.</p>
+
+<p><strong>A forma que será usada.</strong> Como \(n\propto\varepsilon_F^{3/2}\), vale \(dn/d\varepsilon_F = \frac32 n/\varepsilon_F\), isto é</p>
+
+$$\boxed{\;g(\varepsilon_F) = \frac{3}{2}\frac{n}{\varepsilon_F}\;}$$
+
+<p>Essa é a versão a memorizar: é ela que entra no calor específico e que traduz \(g(\varepsilon_F)\) medido em \(m^*\). Note também \(g'(\varepsilon)/g(\varepsilon) = 1/2\varepsilon\), usado em D14.</p>
+
+<p><strong>Interpretação de ordem de grandeza.</strong> \(g(\varepsilon_F)\sim n/\varepsilon_F\) diz que, se todos os \(n\) elétrons estivessem espalhados uniformemente numa faixa de largura \(\varepsilon_F\), a densidade seria essa. O fator 3/2 é a correção de \(\sqrt{\varepsilon}\).</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 2, seção "The Density of Levels" (o apanhado \(g(\varepsilon)=3n/2\varepsilon_F\) está na forma de equação destacada). · Kittel, cap. 6, "Density of states". · Salinas, cap. 8, na versão estatística. · Simon, cap. 4.1.</p>
+</details>
+
+<h3 id="b7">Bloco 7 — O cancelamento dos dois erros (38–45 min)</h3>
+
+<p><strong>Calor específico eletrônico.</strong> Estimativa física primeiro (mais didática que a manipulação formal): uma fração \(\sim k_BT/\varepsilon_F\) dos elétrons é excitada, cada um ganhando \(\sim k_BT\). Então \(u\sim n(k_BT)^2/\varepsilon_F\) e \(c_v\sim nk_B(T/T_F)\). O cálculo exato via expansão de Sommerfeld dá o coeficiente:</p>
+
+$$c_v = \frac{\pi^2}{3}k_B^2T\,g(\varepsilon_F) = \boxed{\;\frac{\pi^2}{2}nk_B\frac{T}{T_F}\;}$$
+
+<p>Comparando com o valor clássico \(\frac32 nk_B\): <strong>suprimido pelo fator \((\pi^2/3)(T/T_F)\sim10^{-2}\)</strong>. É exatamente a ordem de grandeza que faltava. E a dependência é <strong>linear em T</strong>, não constante.</p>
+
+<details class="demo" id="d14">
+<summary><span class="tag">D14</span> [COMP] Expansão de Sommerfeld e \(\mu(T)\)</summary>
+<div class="body">
+
+<p><strong>O problema.</strong> Precisa-se de integrais do tipo \(\int H(\varepsilon)f(\varepsilon)d\varepsilon\) com \(f\) a distribuição de Fermi. A observação central: \(-\partial f/\partial\varepsilon\) é uma função tipo delta, positiva, centrada em \(\mu\), de largura \(\sim k_BT\) e integral 1. Se \(H\) varia devagar nessa escala, tudo se reduz a momentos dessa quase-delta.</p>
+
+<p><strong>Passo 1.</strong> Defina \(K(\varepsilon) = \int_{-\infty}^{\varepsilon}H(\varepsilon')d\varepsilon'\) e integre por partes:</p>
+
+$$\int_{-\infty}^{\infty}H f\,d\varepsilon = \big[Kf\big]_{-\infty}^{\infty} + \int_{-\infty}^{\infty}K(\varepsilon)\left(-\frac{\partial f}{\partial\varepsilon}\right)d\varepsilon
+= \int_{-\infty}^{\infty}K(\varepsilon)\left(-\frac{\partial f}{\partial\varepsilon}\right)d\varepsilon.$$
+
+<p><strong>Passo 2.</strong> Expanda \(K\) em torno de \(\mu\):</p>
+
+$$K(\varepsilon) = K(\mu) + (\varepsilon-\mu)H(\mu) + \frac{(\varepsilon-\mu)^2}{2}H'(\mu) + \dots$$
+
+<p><strong>Passo 3.</strong> Os momentos. Com \(x = \beta(\varepsilon-\mu)\), \(-\partial f/\partial\varepsilon\) é <em>par</em> em \(x\), então todos os momentos ímpares somem. Os pares valem</p>
+
+$$\int_{-\infty}^{\infty}\left(-\frac{\partial f}{\partial\varepsilon}\right)d\varepsilon = 1,\qquad
+\int_{-\infty}^{\infty}(\varepsilon-\mu)^2\left(-\frac{\partial f}{\partial\varepsilon}\right)d\varepsilon = \frac{\pi^2}{3}(k_BT)^2,$$
+
+<p>este último por \(\int_{-\infty}^{\infty}x^2e^x/(e^x+1)^2dx = \pi^2/3\). Juntando:</p>
+
+$$\boxed{\;\int_{-\infty}^{\infty}H(\varepsilon)f(\varepsilon)d\varepsilon = \int_{-\infty}^{\mu}H(\varepsilon)d\varepsilon + \frac{\pi^2}{6}(k_BT)^2H'(\mu) + O\big((k_BT)^4\big)\;}$$
+
+<p><strong>Condições de validade — a pergunta técnica mais provável sobre este ponto.</strong> Exige-se \(k_BT\ll\varepsilon_F\) e que \(H\) seja suave (analítica) numa vizinhança de \(\mu\) de largura \(\gg k_BT\). A série é assintótica, não convergente; o termo seguinte é \(\frac{7\pi^4}{360}(k_BT)^4H'''(\mu)\). Ela quebra perto de bordas de banda ou de singularidades de van Hove, onde \(g\) não é suave — e em semicondutores, onde a degenerescência é fraca.</p>
+
+<p><strong>Aplicação: \(\mu(T)\).</strong> Conservação do número de partículas, \(n = \int g(\varepsilon)f(\varepsilon)d\varepsilon\), com a expansão:</p>
+
+$$n = \int_0^{\mu}g\,d\varepsilon + \frac{\pi^2}{6}(k_BT)^2g'(\mu).$$
+
+<p>Mas a \(T=0\), \(n = \int_0^{\varepsilon_F}g\,d\varepsilon\). Subtraindo e usando \(\int_{\varepsilon_F}^{\mu}g\,d\varepsilon\approx(\mu-\varepsilon_F)g(\varepsilon_F)\):</p>
+
+$$0 = (\mu-\varepsilon_F)g(\varepsilon_F) + \frac{\pi^2}{6}(k_BT)^2g'(\varepsilon_F)
+\;\Longrightarrow\;
+\mu = \varepsilon_F - \frac{\pi^2}{6}(k_BT)^2\frac{g'(\varepsilon_F)}{g(\varepsilon_F)}.$$
+
+<p>Com \(g\propto\sqrt{\varepsilon}\), \(g'/g = 1/2\varepsilon_F\):</p>
+
+$$\boxed{\;\mu(T) = \varepsilon_F\left[1-\frac{\pi^2}{12}\left(\frac{k_BT}{\varepsilon_F}\right)^2\right]\;}$$
+
+<p><strong>Ordem de grandeza.</strong> No Cu a 300 K, \((k_BT/\varepsilon_F)^2 \approx 1{,}4\times10^{-5}\): a correção é de dez partes por milhão. Por isso \(\mu\approx\varepsilon_F\) em toda a aula. <strong>Ponto sutil que vale guardar:</strong> essa mesma correção de segunda ordem é desprezível em \(\mu\) e <em>essencial</em> em \(u\) — é exatamente o termo que sobrevive em D15 e produz \(c_v\propto T\).</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, <b>Apêndice C</b> — é ali que a expansão é deduzida com rigor, com os momentos e a natureza assintótica da série; o corpo do cap. 2 apenas a utiliza. · Reif, cap. 9.16, versão alternativa. · Salinas, cap. 8, para a mesma expansão na linguagem de \(\Xi\). · Marder, cap. 6, tratamento moderno.</p>
+</details>
+
+<details class="demo" open id="d15">
+<summary><span class="tag">D15</span> Calor específico eletrônico \(c_v = \frac{\pi^2}{3}k_B^2Tg(\varepsilon_F)\)</summary>
+<div class="body">
+
+<p><strong>Primeiro o argumento físico</strong> — é o que vai ao quadro, e é o que o aluno leva para casa. Apenas os elétrons numa casca de espessura \(\sim k_BT\) em torno de \(\varepsilon_F\) têm estados vazios acessíveis: a fração excitável é \(\sim k_BT/\varepsilon_F\), e cada excitado ganha \(\sim k_BT\). Logo</p>
+
+$$u - u_0 \sim n\,\frac{k_BT}{\varepsilon_F}\,k_BT = n\frac{(k_BT)^2}{\varepsilon_F},
+\qquad c_v = \frac{\partial u}{\partial T} \sim nk_B\frac{T}{T_F}.$$
+
+<p>Dois fatores \(k_BT/\varepsilon_F\) explicam tudo: um vem de <em>quantos</em> elétrons participam, o outro (na derivada) de a energia ser quadrática em \(T\). O coeficiente exato vem da expansão de Sommerfeld.</p>
+
+<p><strong>Conta formal.</strong> Aplique D14 a \(H(\varepsilon) = \varepsilon g(\varepsilon)\):</p>
+
+$$u = \int \varepsilon g(\varepsilon)f\,d\varepsilon = \int_0^{\mu}\varepsilon g\,d\varepsilon + \frac{\pi^2}{6}(k_BT)^2\big[g(\mu) + \mu g'(\mu)\big].$$
+
+<p>Quebre o primeiro termo em torno de \(\varepsilon_F\):</p>
+
+$$\int_0^{\mu}\varepsilon g\,d\varepsilon = \int_0^{\varepsilon_F}\varepsilon g\,d\varepsilon + (\mu-\varepsilon_F)\,\varepsilon_F\,g(\varepsilon_F) + O\big((\mu-\varepsilon_F)^2\big).$$
+
+<p>Agora use \(\mu-\varepsilon_F = -\frac{\pi^2}{6}(k_BT)^2 g'(\varepsilon_F)/g(\varepsilon_F)\), de D14. O segundo termo vira \(-\frac{\pi^2}{6}(k_BT)^2\varepsilon_F g'(\varepsilon_F)\), que <strong>cancela exatamente</strong> o \(\mu g'(\mu)\) da expansão. Sobra:</p>
+
+$$u = u_0 + \frac{\pi^2}{6}(k_BT)^2 g(\varepsilon_F).$$
+
+<p>Esse cancelamento é o ponto elegante da conta — ele diz que a variação de \(\mu\) não contribui à energia em ordem \(T^2\), e que tudo depende de \(g\) <em>no</em> nível de Fermi. Derivando:</p>
+
+$$\boxed{\;c_v = \frac{\partial u}{\partial T} = \frac{\pi^2}{3}k_B^2T\,g(\varepsilon_F)\;}$$
+
+<p><strong>Forma de elétrons livres.</strong> Com \(g(\varepsilon_F)=3n/2\varepsilon_F\) (D13):</p>
+
+$$c_v = \frac{\pi^2}{3}k_B^2T\cdot\frac{3n}{2\varepsilon_F} = \frac{\pi^2}{2}nk_B\frac{k_BT}{\varepsilon_F} = \frac{\pi^2}{2}nk_B\frac{T}{T_F}.$$
+
+<p><strong>O fator de supressão, explicitamente:</strong></p>
+
+$$\frac{c_v^{\,\mathrm{FD}}}{c_v^{\,\mathrm{MB}}} = \frac{(\pi^2/2)nk_B(T/T_F)}{(3/2)nk_B} = \frac{\pi^2}{3}\frac{T}{T_F}.$$
+
+<p>No Cu a 300 K, \(T/T_F = 3{,}7\times10^{-3}\) e o fator é \(1{,}2\times10^{-2}\). Os cem que faltavam, com o coeficiente certo.</p>
+
+<p><strong>Duas consequências a dizer em voz alta.</strong> (i) A dependência é <em>linear</em> em \(T\), não constante — assinatura experimental inequívoca. (ii) \(c_v\) mede \(g(\varepsilon_F)\), e mais nada: qualquer modelo que acerte a densidade de estados no nível de Fermi acerta \(c_v\).</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 2, seção "Thermal Properties of the Free Electron Gas: The Sommerfeld Expansion" e seguinte — a conta é feita ali nesta ordem, e a Tabela 2.3 traz \(\gamma\) medido × \(\gamma\) de elétrons livres. · Simon, cap. 4.2, com a estimativa física antes da formal. · Kittel, cap. 6, "Heat capacity of the electron gas". · Salinas, cap. 8.</p>
+</details>
+
+<div class="callout"><span class="lbl">[COMP] Expansão de Sommerfeld formal</span>
+Para \(H(\varepsilon)\) suave perto de \(\mu\) e \(k_BT\ll\varepsilon_F\):
+$$\int_{-\infty}^{\infty}\!\! H(\varepsilon)f(\varepsilon)\,d\varepsilon = \int_{-\infty}^{\mu}\!\! H(\varepsilon)\,d\varepsilon + \frac{\pi^2}{6}(k_BT)^2H'(\mu) + O\!\left((k_BT)^4\right)$$
+Aplicada à conservação do número de partículas, dá também \(\mu(T) = \varepsilon_F[1-(\pi^2/12)(k_BT/\varepsilon_F)^2]\) — o potencial químico decresce muito lentamente com \(T\), o que justifica usar \(\mu\approx\varepsilon_F\) na maior parte das estimativas. <em>Dedução completa em <a href="#d14">D14</a>.</em>
+</div>
+
+<div class="callout"><span class="lbl">[EXTRA] Verificação experimental</span>
+Num metal a baixa temperatura, \(c = \gamma T + AT^3\) (elétrons + fônons de Debye). Dividindo por \(T\), um gráfico de \(c/T\) contra \(T^2\) é uma reta cujo coeficiente linear é \(\gamma\). É assim que se mede \(g(\varepsilon_F)\) experimentalmente — e o desvio entre \(\gamma\) medido e \(\gamma\) de elétrons livres define a <strong>massa efetiva</strong> \(m^*\), ponte natural para a teoria de bandas e para a teoria de líquido de Fermi.
+</div>
+
+<p><strong>Condutividade térmica, refeita.</strong> Mesma fórmula cinética, ingredientes corrigidos: \(c_v = \frac{\pi^2}{2}nk_B(T/T_F)\) e \(v^2 = v_F^2 = 2\varepsilon_F/m\):</p>
+
+$$\kappa = \frac{1}{3}\cdot\frac{2\varepsilon_F}{m}\cdot\tau\cdot\frac{\pi^2}{2}nk_B\frac{T}{T_F} = \frac{\pi^2}{3}\frac{nk_B^2\tau T}{m}$$
+
+$$\boxed{\;\frac{\kappa}{\sigma T} = \frac{\pi^2}{3}\left(\frac{k_B}{e}\right)^2 = L_0 = 2{,}44\times10^{-8}\ \mathrm{W\cdot\Omega/K^2}\;}$$
+
+<p><strong>Agora em excelente acordo com o experimento.</strong></p>
+
+<details class="demo" open id="d16">
+<summary><span class="tag">D16</span> \(\kappa\) quântico e o número de Lorenz \(L_0\)</summary>
+<div class="body">
+
+<p><strong>O que muda e o que não muda.</strong> A fórmula cinética \(\kappa = \frac13\langle v^2\rangle\tau c_v\) permanece — ela não usou estatística nenhuma, só transporte difusivo. Trocam-se os dois ingredientes:</p>
+
+<ul>
+<li>\(c_v \to \dfrac{\pi^2}{2}nk_B\dfrac{T}{T_F}\) (D15), no lugar de \(\frac32 nk_B\);</li>
+<li>\(\langle v^2\rangle \to v_F^2 = \dfrac{2\varepsilon_F}{m}\), no lugar de \(3k_BT/m\).</li>
+</ul>
+
+<p><strong>Por que \(v_F\), e não \(\langle v^2\rangle\) sobre toda a esfera.</strong> Só os elétrons na casca em torno de \(\varepsilon_F\) transportam calor — os de dentro não têm estados vazios para onde ir. A velocidade relevante é, portanto, a da superfície de Fermi, e ela <em>não</em> depende de \(T\).</p>
+
+<p><strong>Substituindo:</strong></p>
+
+$$\kappa = \frac13\cdot\frac{2\varepsilon_F}{m}\cdot\tau\cdot\frac{\pi^2}{2}nk_B\frac{k_BT}{\varepsilon_F}
+= \frac{\pi^2}{3}\frac{nk_B^2\tau T}{m}.$$
+
+<p>Note que \(\varepsilon_F\) cancelou — o que sobrou depende de \(n\), \(\tau\), \(m\) e \(T\), exatamente a mesma combinação de \(\sigma T\).</p>
+
+<p><strong>Dividindo por \(\sigma T = ne^2\tau T/m\):</strong></p>
+
+$$\boxed{\;\frac{\kappa}{\sigma T} = \frac{\pi^2}{3}\left(\frac{k_B}{e}\right)^2 \equiv L_0\;}$$
+
+<p>Numericamente, com \(k_B/e = 8{,}617\times10^{-5}\) V/K:</p>
+
+$$L_0 = \frac{\pi^2}{3}(8{,}617\times10^{-5})^2 = 3{,}290\times7{,}43\times10^{-9} = 2{,}44\times10^{-8}\ \mathrm{W\cdot\Omega/K^2}.$$
+
+<p><strong>Contra o experimento:</strong> Cu 2,20; Ag 2,31; Au 2,35; Al 2,2 (unidades de \(10^{-8}\) W·Ω/K², a 273 K). Acordo de poucos por cento — e sem nenhum parâmetro ajustável, porque \(\tau\), \(n\) e \(m\) cancelaram. Confira os valores na Tabela 1.6 do A&amp;M antes da aula.</p>
+
+<p><strong>A hipótese escondida, que a banca pode cobrar:</strong> o mesmo \(\tau\) para carga e calor. Isso exige espalhamento <em>elástico</em>. Quando o espalhamento é inelástico — fônons em \(T\) intermediária — a lei falha e \(L\) mergulha abaixo de \(L_0\). Veja Parte V, pergunta 3.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Ashcroft &amp; Mermin, cap. 2, no fecho ("Thermal conductivity / Wiedemann–Franz revisited"), com a Tabela 1.6 do cap. 1 para o confronto. · Simon, cap. 4.3. · Kittel, cap. 6, "Thermal conductivity of metals". · Ashcroft &amp; Mermin, cap. 13, para a versão via equação de Boltzmann, onde a hipótese do \(\tau\) comum fica explícita.</p>
+</details>
+
+<p><strong>Voltar à pergunta deixada no Bloco 5 e fechá-la explicitamente.</strong> Escrever lado a lado:</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Ingrediente</th><th>Drude</th><th>Sommerfeld</th><th>Razão</th></tr></thead>
+<tbody>
+<tr><td>\(c_v\)</td><td>\(\frac32 nk_B\)</td><td>\(\frac{\pi^2}{2}nk_B(T/T_F)\)</td><td>~\(10^{-2}\)</td></tr>
+<tr><td>\(v^2\)</td><td>\(3k_BT/m\)</td><td>\(2\varepsilon_F/m\)</td><td>~\(10^{+2}\)</td></tr>
+<tr><td><strong>produto \(v^2c_v\)</strong></td><td>—</td><td>—</td><td><strong>\(2\pi^2/9\approx2{,}2\)</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Drude superestimou o calor específico por ~100 e subestimou a velocidade típica por ~100. Em \(\kappa = \frac13 v^2\tau c_v\), os dois erros <strong>se multiplicam e quase se cancelam</strong>. Sobra um fator \(2\pi^2/9\approx2{,}2\) — exatamente a razão entre \(L_0\) e o valor clássico.</p>
+
+<details class="demo" open id="d17">
+<summary><span class="tag">D17</span> O cancelamento, com os expoentes na mão</summary>
+<div class="body">
+
+<p><strong>Os dois erros, cada um isolado.</strong> Com \(T=300\) K e \(T_F=8{,}2\times10^4\) K para o Cu:</p>
+
+$$\frac{c_v^{\,S}}{c_v^{\,D}} = \frac{\pi^2}{3}\frac{T}{T_F} = 3{,}29\times3{,}66\times10^{-3} = 1{,}2\times10^{-2},$$
+
+$$\frac{(v^2)^{S}}{(v^2)^{D}} = \frac{2\varepsilon_F/m}{3k_BT/m} = \frac{2}{3}\frac{T_F}{T} = \frac{2}{3}\times273 = 1{,}8\times10^{2}.$$
+
+<p>Um para baixo por ~100, outro para cima por ~100. Nenhum dos dois é pequeno; ambos são catastróficos <em>sozinhos</em>.</p>
+
+<p><strong>O produto, exato.</strong> Em \(\kappa=\frac13 v^2\tau c_v\) só aparece o produto:</p>
+
+$$\frac{\kappa_S}{\kappa_D} = \frac{c_v^{\,S}}{c_v^{\,D}}\cdot\frac{(v^2)^{S}}{(v^2)^{D}}
+= \left(\frac{\pi^2}{3}\frac{T}{T_F}\right)\left(\frac{2}{3}\frac{T_F}{T}\right) = \frac{2\pi^2}{9} \approx 2{,}193.$$
+
+<p><strong>\(T\) e \(T_F\) cancelaram.</strong> Não é "quase se cancelam por coincidência numérica": o cancelamento é <em>exato em toda temperatura</em>, porque os dois fatores dependem de \(T/T_F\) com expoentes \(+1\) e \(-1\). O que sobra é um número puro.</p>
+
+<p><strong>E ele é o número certo:</strong></p>
+
+$$\frac{L_0}{L_{cl}} = \frac{(\pi^2/3)(k_B/e)^2}{(3/2)(k_B/e)^2} = \frac{2\pi^2}{9} = 2{,}193.$$
+
+<p>O mesmo \(2\pi^2/9\), pela razão óbvia: \(L\) é \(\kappa/\sigma T\), e \(\sigma\) é idêntico nos dois modelos.</p>
+
+<p><strong>Por que \(Q\) não se salva.</strong> O poder termoelétrico é \(Q = -c_v/3ne\): contém \(c_v\) <em>sozinho</em>, sem \(v^2\) para compensar. Ele cai pelo fator \((\pi^2/3)(T/T_F)\) inteiro, e sai de \(-43\) μV/K para a ordem de μV/K observada:</p>
+
+$$Q = -\frac{\pi^2}{6}\frac{k_B}{e}\frac{k_BT}{\varepsilon_F}.$$
+
+<p>É esse contraste — WF sobrevive, \(Q\) não — que mostra que o acordo de Drude era estrutural, e não evidência a favor do modelo.</p>
+
+<p><strong>A moral epistemológica</strong>, em uma frase para a banca: Wiedemann–Franz testa a razão entre duas grandezas que compartilham o mesmo erro, e por isso é cego a ele. Foi uma coincidência produtiva — manteve o programa de elétrons livres vivo por 28 anos, até que a estatística correta existisse para consertá-lo.</p>
+
+</div>
+<p class="src"><b>Onde encontrar:</b> Síntese própria — não há livro que monte a tabela assim. O mais próximo é Simon, <i>Oxford Solid State Basics</i>, caps. 3–4, que narra o cancelamento explicitamente e é a melhor fonte para o <em>ângulo</em> desta parte. · Ashcroft &amp; Mermin, cap. 2, faz a comparação numérica sem nomeá-la. · Os ingredientes vêm de D7, D15 e D16.</p>
+</details>
+
+<p><strong>A moral epistemológica</strong> (vale dizer em voz alta para a banca): o acordo de Drude com Wiedemann–Franz não era evidência de que o modelo estivesse certo. Era uma coincidência estrutural — e uma coincidência produtiva, porque manteve o programa de elétrons livres vivo por 28 anos, até que a estatística correta existisse para consertá-lo. Vale acrescentar que o poder termoelétrico, onde não há cancelamento, cai por si só: \(Q = -\frac{\pi^2}{6}\frac{k_B}{e}\frac{k_BT}{\varepsilon_F}\), reduzido pelo mesmo fator \(T/T_F\) e agora da ordem de μV/K.</p>
+
+<h3 id="b8">Bloco 8 — Fechamento (45–50 min)</h3>
+
+<p><strong>O que Sommerfeld conserta:</strong> calor específico; poder termoelétrico; número de Lorenz; magnitude de \(v_F\) e de \(\ell\); a própria estabilidade do gás denso.</p>
+
+<p><strong>O que permanece sem explicação — e por quê:</strong></p>
+<ol>
+  <li><strong>Sinal do coeficiente Hall</strong> positivo em Al, Be, In (portadores tipo buraco);</li>
+  <li><strong>A distinção metal / isolante / semicondutor</strong> — por que o carbono na forma de diamante é isolante e na de grafite é condutor;</li>
+  <li><strong>Magnetorresistência</strong> e sua anisotropia;</li>
+  <li><strong>A origem física de \(\tau\)</strong>, que continua um parâmetro fenomenológico ajustado ao experimento;</li>
+  <li><strong>Propriedades ópticas</strong> acima da borda de plasma (transições interbanda);</li>
+  <li><strong>Por que o modelo funciona tão bem justamente nos alcalinos</strong> e mal nos metais de transição.</li>
+</ol>
+
+<p><strong>O diagnóstico comum a todos os seis:</strong> a hipótese H1 — desprezar o potencial dos íons — é insustentável. O passo seguinte não é abandonar os elétrons livres, e sim restaurar a <strong>periodicidade</strong> do potencial cristalino: teorema de Bloch, zonas de Brillouin, estrutura de bandas. É o assunto da próxima aula.</p>
+
+<p><strong>Frase de encerramento sugerida:</strong></p>
+<blockquote>Drude nos deu a linguagem do transporte — \(\sigma\), \(\tau\), \(\ell\), a equação de movimento amortecida. Sommerfeld nos deu a estatística correta e, com ela, os números certos. Falta ainda o cristal. Os elétrons de um metal são livres o bastante para que Sommerfeld funcione, e presos o bastante para que ele não baste.</blockquote>
+
+<h2 id="parte4">Parte IV — Mapa de quadro</h2>
+
+<p>Planejar o quadro é critério de avaliação em prova didática. Sugestão para três painéis:</p>
+
+<p><strong>Painel esquerdo (permanece a aula inteira):</strong></p>
+<ul>
+  <li>Pergunta condutora: \(\kappa/\sigma T \approx\) const?</li>
+  <li>H1–H4 de Drude</li>
+  <li>\(\sigma = ne^2\tau/m\)</li>
+  <li>\(\kappa = \frac13 v^2\tau c_v\)</li>
+</ul>
+
+<p><strong>Painel central (rotativo — as deduções):</strong></p>
+<ul>
+  <li>Bloco 3: \(d\mathbf{p}/dt = -\mathbf{p}/\tau + \mathbf{F}\)</li>
+  <li>Bloco 4: \(L_{cl} = \frac32(k_B/e)^2\)</li>
+  <li>Bloco 6: esfera de Fermi (desenho) + \(k_F\), \(\varepsilon_F\), \(T_F\), \(v_F\)</li>
+  <li>Bloco 7: \(c_v\) quântico e \(L_0\)</li>
+</ul>
+
+<p><strong>Painel direito (o "placar"):</strong> tabela viva, construída ao longo da aula.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Grandeza</th><th>Drude</th><th>Sommerfeld</th><th>Experimento</th></tr></thead>
+<tbody>
+<tr><td>\(\sigma\)</td><td>✓ forma correta</td><td>✓</td><td>✓</td></tr>
+<tr><td>\(\omega_p\)</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td>\(c_v\) eletrônico</td><td>✗ 100×</td><td>✓</td><td>linear em \(T\)</td></tr>
+<tr><td>\(Q\) (termopotência)</td><td>✗ 100×</td><td>✓</td><td>~μV/K</td></tr>
+<tr><td>\(L\)</td><td>~ (fator 2)</td><td>✓</td><td>\(2{,}4\times10^{-8}\)</td></tr>
+<tr><td>sinal de \(R_H\)</td><td>✗</td><td>✗</td><td>exige bandas</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Terminar a aula apontando para esta tabela é o fechamento visual mais forte disponível.</p>
+
+<h2 id="parte5">Parte V — Arguição prevista</h2>
+
+<p>Perguntas prováveis, com respostas de referência.</p>
+
+<p><strong>1. Por que o espalhamento elétron–elétron é desprezível, se a densidade é tão alta?</strong><br>
+Pauli. Uma colisão exige estados finais vazios para ambos os elétrons, disponíveis apenas na casca \(\sim k_BT\) em torno de \(\varepsilon_F\). O espaço de fase disponível escala com \((k_BT/\varepsilon_F)^2\), suprimindo a taxa por \(\sim10^{-4}\) à temperatura ambiente. Há também blindagem de Thomas–Fermi, que reduz o alcance efetivo da interação coulombiana.</p>
+
+<p><strong>2. Se \(v_F\sim10^8\) cm/s, por que a velocidade de deriva é da ordem de cm/s?</strong><br>
+São coisas distintas. \(v_F\) é a velocidade dos elétrons no estado fundamental, que se cancela por simetria: a esfera de Fermi não deslocada não carrega corrente. O campo desloca a esfera inteira de \(\delta k = -eE\tau/\hbar\), minúsculo comparado a \(k_F\). A corrente vem desse deslocamento, não do módulo das velocidades.</p>
+
+<p><strong>3. \(\tau\) é o mesmo para transporte elétrico e térmico?</strong><br>
+Na aproximação de tempo de relaxação com <strong>espalhamento elástico</strong>, sim — e é precisamente isso que produz a lei de Wiedemann–Franz. Quando o espalhamento é inelástico (fônons a temperaturas intermediárias), deixa de ser: pequenos ângulos degradam eficientemente a corrente térmica mas pouco a corrente elétrica, e \(L\) cai abaixo de \(L_0\). WF é boa acima de \(\theta_D\) e no regime residual de baixa \(T\), e falha no meio.</p>
+
+<p><strong>4. Por que condições de contorno periódicas, e não paredes rígidas?</strong><br>
+Propriedades de bulk não podem depender da escolha, pois diferem por efeitos de superfície \(O(N^{2/3}/N)\). As periódicas dão ondas planas propagantes com \(\mathbf{k}\) bem definido, mais convenientes para transporte, enquanto as rígidas dão ondas estacionárias — e ambas geram a mesma densidade de estados no limite termodinâmico. <em>(Detalhe da contagem em <a href="#d11">D11</a>.)</em></p>
+
+<p><strong>5. Por que \(\mu\neq\varepsilon_F\), e quando isso importa?</strong><br>
+\(\varepsilon_F\) é definido a \(T=0\). Para \(T>0\), \(\mu(T) = \varepsilon_F[1-(\pi^2/12)(k_BT/\varepsilon_F)^2]\). A correção é \(\sim10^{-4}\) à temperatura ambiente em metais — irrelevante ali, essencial em semicondutores, onde a degenerescência é fraca. <em>(Dedução em <a href="#d14">D14</a>.)</em></p>
+
+<p><strong>6. A condução térmica em metais não tem contribuição de fônons?</strong><br>
+Tem, mas é tipicamente 1–2 ordens de grandeza menor num bom metal — daí ser legítimo desprezá-la aqui. Em ligas desordenadas, onde os elétrons são fortemente espalhados, a razão pode se aproximar de 1.</p>
+
+<p><strong>7. Qual o status do modelo hoje?</strong><br>
+Sommerfeld é o caso não interagente de referência. A justificativa moderna de por que ele funciona tão bem, apesar da interação coulombiana forte, é a teoria de líquido de Fermi de Landau: as excitações de baixa energia são quasipartículas em correspondência um-a-um com os elétrons livres, com massa renormalizada \(m^*\). Os resultados desta aula sobrevivem com \(m\to m^*\).</p>
+
+<p><strong>8. Por que este é o momento certo do curso para essa aula?</strong><br>
+Porque estabelece o vocabulário (\(\tau\), \(\ell\), \(k_F\), \(\varepsilon_F\), \(g(\varepsilon)\)) e, mais importante, cria a <em>necessidade</em> da teoria de bandas por demonstração de insuficiência, em vez de introduzi-la por decreto.</p>
+
+<h2 id="parte6">Parte VI — Observações didáticas</h2>
+
+<ul>
+  <li><strong>Não apresentar Drude como "o modelo errado".</strong> Apresentá-lo como o modelo que estabeleceu a linguagem do transporte e que continua em uso — \(\sigma(\omega)\) de Drude é padrão em espectroscopia óptica até hoje. Bancas reagem mal a caricaturas históricas.</li>
+  <li><strong>O momento decisivo da aula é \(T\ll T_F\).</strong> Se apenas uma ideia sobreviver na cabeça do aluno, deve ser essa. Repetir explicitamente três vezes.</li>
+  <li><strong>Não pular a dedução de \(d\mathbf{p}/dt = -\mathbf{p}/\tau + \mathbf{F}\)</strong> com o argumento probabilístico. É onde a banca verifica domínio técnico, e é curto.</li>
+  <li><strong>Deixar a pergunta do Bloco 5 sem resposta por ~13 minutos</strong> é uma escolha didática deliberada, não um esquecimento. Vale sinalizá-la como tal ("vou deixar essa pergunta em aberto de propósito").</li>
+  <li><strong>Reservar 90 s finais</strong> para a síntese com a tabela do painel direito. Provas didáticas costumam ser perdidas no gerenciamento do tempo, não no conteúdo.</li>
+</ul>
+
+<h2 id="ref">Referências</h2>
+
+<h4>Bibliografia básica</h4>
+<p>ASHCROFT, N. W.; MERMIN, N. D. <i>Solid State Physics</i>. New York: Holt, Rinehart and Winston, 1976. Capítulos 1, 2 e 3, e Apêndice C. <strong>[referência principal desta aula]</strong></p>
+<p>KITTEL, C. <i>Introduction to Solid State Physics</i>. 8. ed. Hoboken: John Wiley &amp; Sons, 2005. Capítulo 6.</p>
+<p>OLIVEIRA, I. S.; JESUS, V. L. B. <i>Introdução à Física do Estado Sólido</i>. 2. ed. São Paulo: Livraria da Física, 2011.</p>
+
+<h4>Bibliografia complementar</h4>
+<p>IBACH, H.; LÜTH, H. <i>Solid-State Physics: An Introduction to Principles of Materials Science</i>. 4. ed. Berlin: Springer, 2009.</p>
+<p>MARDER, M. P. <i>Condensed Matter Physics</i>. 2. ed. Hoboken: John Wiley &amp; Sons, 2010.</p>
+<p>REZENDE, S. M. <i>A Física de Materiais e Dispositivos Eletrônicos</i>. 2. ed. Recife: Editora UFPE, 2015.</p>
+<p>GROSSO, G.; PASTORI PARRAVICINI, G. <i>Solid State Physics</i>. 2. ed. Amsterdam: Academic Press, 2014.</p>
+
+<h4>Fontes das deduções deste documento</h4>
+<p>REIF, F. <i>Fundamentals of Statistical and Thermal Physics</i>. New York: McGraw-Hill, 1965. Caps. 9 e 12. <strong>[fonte de D6, o argumento de meio caminho livre]</strong></p>
+<p>SALINAS, S. R. A. <i>Introdução à Física Estatística</i>. 2. ed. São Paulo: EDUSP, 2005. Cap. 8. <strong>[fonte de D9 e D10]</strong></p>
+<p>SIMON, S. H. <i>The Oxford Solid State Basics</i>. Oxford: Oxford University Press, 2013. Caps. 3 e 4. <strong>[fonte do ângulo narrativo de D17]</strong></p>
+<p>GRIFFITHS, D. J. <i>Introduction to Electrodynamics</i>. 4. ed. Cambridge: Cambridge University Press, 2017. Seção 9.4. <strong>[apoio a D4]</strong></p>
+
+<h4>Fontes primárias</h4>
+<p>DRUDE, P. Zur Elektronentheorie der Metalle. <i>Annalen der Physik</i>, v. 306, n. 3, p. 566–613, 1900.</p>
+<p>DRUDE, P. Zur Elektronentheorie der Metalle; II. Teil. Galvanomagnetische und thermomagnetische Effecte. <i>Annalen der Physik</i>, v. 308, n. 11, p. 369–402, 1900.</p>
+<p>SOMMERFELD, A. Zur Elektronentheorie der Metalle auf Grund der Fermischen Statistik. <i>Zeitschrift für Physik</i>, v. 47, n. 1–2, p. 1–32, 1928.</p>
+<p>WIEDEMANN, G.; FRANZ, R. Ueber die Wärme-Leitungsfähigkeit der Metalle. <i>Annalen der Physik</i>, v. 165, n. 8, p. 497–531, 1853.</p>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var demos = document.querySelectorAll('details.demo');
+  document.getElementById('collapseAll').addEventListener('click', function(){
+    demos.forEach(function(d){ d.open = false; });
+  });
+  document.getElementById('expandAll').addEventListener('click', function(){
+    demos.forEach(function(d){ d.open = true; });
+  });
+
+  var btn = document.getElementById('themeBtn');
+  btn.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    if(!cur){
+      cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    try{ localStorage.setItem('ds-theme', document.documentElement.getAttribute('data-theme')); }catch(e){}
+  });
+  try{
+    var saved = localStorage.getItem('ds-theme');
+    if(saved){ document.documentElement.setAttribute('data-theme', saved); }
+  }catch(e){}
+
+  var rail = document.getElementById('rail');
+  var toggle = document.getElementById('railToggle');
+  toggle.addEventListener('click', function(){
+    var open = rail.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  rail.querySelectorAll('.rail-inner a').forEach(function(a){
+    a.addEventListener('click', function(){ rail.classList.remove('open'); });
+  });
+
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail-inner a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(!en.isIntersecting) return;
+      var i = targets.indexOf(en.target);
+      if(i < 0) return;
+      links.forEach(function(l){ l.classList.remove('on'); });
+      links[i].classList.add('on');
+    });
+  }, {rootMargin: '0px 0px -75% 0px'});
+  targets.forEach(function(t){ if(t) obs.observe(t); });
+
+  window.addEventListener('beforeprint', function(){
+    demos.forEach(function(d){ d.open = true; });
+  });
+})();
+</script>
+</body>
+</html>
