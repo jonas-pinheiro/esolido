@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drude e Sommerfeld — roteiro enxuto</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfaf7; --fg:#1d1d1b; --muted:#6b6a65; --line:#e3e0d8; --card:#ffffff;
+  --accent:#9a3412; --accent-soft:#fdf0e8; --ok:#166534; --ok-soft:#ecf7ef;
+  --warn:#92400e; --warn-soft:#fef6e4; --cut:#6b7280; --cut-soft:#f2f2f0;
+  --b1:#c2410c; --b2:#0369a1; --b3:#7c3aed; --b4:#15803d;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16161a; --fg:#ebe9e4; --muted:#a19f99; --line:#2f2f35; --card:#1e1e23;
+    --accent:#fb923c; --accent-soft:#2b1d14; --ok:#4ade80; --ok-soft:#15241a;
+    --warn:#fbbf24; --warn-soft:#2a2213; --cut:#9ca3af; --cut-soft:#24242a;
+    --b1:#fb923c; --b2:#38bdf8; --b3:#a78bfa; --b4:#4ade80;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16161a; --fg:#ebe9e4; --muted:#a19f99; --line:#2f2f35; --card:#1e1e23;
+  --accent:#fb923c; --accent-soft:#2b1d14; --ok:#4ade80; --ok-soft:#15241a;
+  --warn:#fbbf24; --warn-soft:#2a2213; --cut:#9ca3af; --cut-soft:#24242a;
+  --b1:#fb923c; --b2:#38bdf8; --b3:#a78bfa; --b4:#4ade80;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 "Source Serif 4",Georgia,serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 16px 80px}
+h1,h2,h3,.sans,table,nav,.tag,button{font-family:Inter,system-ui,sans-serif}
+h1{font-size:1.7rem;line-height:1.25;margin:.2em 0 .3em}
+h2{font-size:1.25rem;margin:2.4em 0 .6em;padding-top:.6em;border-top:1px solid var(--line)}
+h3{font-size:1.02rem;margin:1.6em 0 .4em}
+.kicker{font:500 .8rem Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lead{color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0}
+nav a{font-size:.82rem;padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;background:var(--card)}
+nav a:hover{border-color:var(--accent)}
+.q{background:var(--accent-soft);border-left:4px solid var(--accent);padding:14px 18px;border-radius:6px;margin:18px 0;font-size:1.08rem}
+.q b{font-family:Inter,sans-serif;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);display:block;margin-bottom:4px}
+.bar{display:flex;height:34px;border-radius:6px;overflow:hidden;margin:14px 0 6px;font:600 .72rem Inter,sans-serif;color:#fff}
+.bar div{display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.35)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font:.8rem Inter,sans-serif;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;background:var(--c)}
+.tablewrap{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.03em}
+td.min{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.t-q{background:var(--ok-soft);color:var(--ok)}
+.t-e{background:var(--warn-soft);color:var(--warn)}
+.t-c{background:var(--cut-soft);color:var(--cut)}
+.block{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px 20px 14px;margin:16px 0}
+.block h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.block h3 .min{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500;font-size:.85rem}
+.say{border-left:3px solid var(--line);padding-left:12px;color:var(--muted);font-style:italic;margin:10px 0}
+.num{font-family:Inter,sans-serif;font-size:.9rem;background:var(--cut-soft);border-radius:6px;padding:8px 12px;margin:10px 0}
+details{border:1px solid var(--line);border-radius:8px;margin:12px 0;background:var(--bg)}
+summary{cursor:pointer;padding:9px 14px;font:600 .88rem Inter,sans-serif;color:var(--accent);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";}
+details[open] summary::before{content:"▾ ";}
+details>div{padding:0 16px 12px}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.tier{border-radius:10px;padding:6px 18px 10px;margin:14px 0}
+.tier1{background:var(--accent-soft)} .tier2{background:var(--ok-soft)} .tier3{background:var(--warn-soft)} .tier4{background:var(--cut-soft)}
+.tier h3{margin-top:.8em}
+.tier ul{padding-left:20px;margin:.3em 0}
+.panels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:.9rem}
+.panel h4{margin:0 0 6px;font:600 .78rem Inter,sans-serif;text-transform:uppercase;color:var(--muted)}
+.panel ul{padding-left:18px;margin:0}
+@media (max-width:640px){.panels{grid-template-columns:1fr} body{font-size:16px}}
+.qa dt{font-weight:600;margin-top:12px}
+.qa dd{margin:3px 0 0 0;color:var(--fg)}
+.toggle{position:fixed;top:12px;right:12px;font-size:.78rem;padding:5px 10px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:6px;cursor:pointer}
+footer{margin-top:3em;font-size:.82rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<button class="toggle" onclick="var r=document.documentElement;r.dataset.theme=(r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme: dark)').matches))?'light':'dark'">tema</button>
+<div class="wrap">
+
+<div class="kicker">Prova didática · 50 min · banca de estado sólido (experimental)</div>
+<h1>Drude e Sommerfeld: por que κ/σT é universal</h1>
+<p class="lead">Versão enxuta do roteiro completo. Uma pergunta, uma linha narrativa, poucas deduções no quadro. As demais deduções ficam como munição para a arguição.</p>
+
+<div class="q"><b>Pergunta condutora · vai ao quadro no minuto 1 e fica até o fim</b>
+Por que a razão \(\kappa/\sigma T\) é praticamente a mesma para cobre, prata, ouro e alumínio?</div>
+
+<p>Arco da aula: <b>Drude acerta</b> essa razão → <b>descobrimos que foi por sorte</b> (\(c_v\) errado por 100) → <b>Sommerfeld</b> troca só a estatística → <b>os dois erros se cancelam</b> e o valor fica certo → o que ainda falta pede bandas.</p>
+
+<nav>
+  <a href="#tempo">Cronometragem</a><a href="#roteiro">Roteiro</a><a href="#quadro">Mapa de quadro</a>
+  <a href="#estudo">O que estudar</a><a href="#arguicao">Arguição</a><a href="#corte">Se atrasar</a>
+</nav>
+
+<h2 id="tempo">Cronometragem</h2>
+<div class="bar">
+  <div style="flex:9;background:var(--b1)">Drude 0–9</div>
+  <div style="flex:13;background:var(--b1);filter:brightness(.85)">σ 9–22</div>
+  <div style="flex:8;background:var(--b2)">WF + crise</div>
+  <div style="flex:11;background:var(--b3)">Sommerfeld</div>
+  <div style="flex:5;background:var(--b4)">L₀</div>
+  <div style="flex:4;background:var(--cut)">fim</div>
+</div>
+<div class="legend">
+  <span style="--c:var(--b1)">Drude</span><span style="--c:var(--b2)">Wiedemann–Franz e crise</span>
+  <span style="--c:var(--b3)">Sommerfeld</span><span style="--c:var(--b4)">Cancelamento</span><span style="--c:var(--cut)">Fechamento e folga</span>
+</div>
+
+<div class="tablewrap"><table>
+<tr><th>Min</th><th>Bloco</th><th>Modo</th></tr>
+<tr><td class="min">0–2</td><td>Contexto e pergunta condutora</td><td><span class="tag t-e">expor</span></td></tr>
+<tr><td class="min">2–5</td><td>Gás de elétrons; \(n\) do Cu</td><td><span class="tag t-e">expor número</span></td></tr>
+<tr><td class="min">5–9</td><td>As 4 hipóteses</td><td><span class="tag t-q">quadro</span></td></tr>
+<tr><td class="min">9–15</td><td>Equação de movimento \(d\mathbf p/dt=-\mathbf p/\tau+\mathbf F\)</td><td><span class="tag t-q">deduzir</span></td></tr>
+<tr><td class="min">15–19</td><td>Estacionário → \(\sigma=ne^2\tau/m\); \(\tau\) do Cu</td><td><span class="tag t-q">deduzir</span></td></tr>
+<tr><td class="min">19–22</td><td>Implicações: \(\ell\) e a queda de H3</td><td><span class="tag t-e">expor</span></td></tr>
+<tr><td class="min">22–27</td><td>Wiedemann–Franz clássico</td><td><span class="tag t-q">conta curta</span></td></tr>
+<tr><td class="min">27–30</td><td>A crise: \(c_v\) errado por 100</td><td><span class="tag t-e">expor</span></td></tr>
+<tr><td class="min">30–36</td><td>Sommerfeld: esfera de Fermi, \(\varepsilon_F,T_F,v_F\)</td><td><span class="tag t-q">desenho + números</span></td></tr>
+<tr><td class="min">36–41</td><td>Casca \(k_BT\): \(c_v\sim nk_B\,T/T_F\)</td><td><span class="tag t-q">estimativa</span></td></tr>
+<tr><td class="min">41–46</td><td>Cancelamento → \(L_0\)</td><td><span class="tag t-q">tabela · clímax</span></td></tr>
+<tr><td class="min">46–49</td><td>O que ainda falha → bandas</td><td><span class="tag t-e">expor</span></td></tr>
+<tr><td class="min">49–50</td><td>Folga</td><td></td></tr>
+</table></div>
+
+<p class="sans" style="font-size:.85rem;color:var(--muted)">Saem da aula (viram resposta de arguição): condutividade AC e \(\omega_p\), dedução do Hall, poder termoelétrico, critério \(n\lambda^3\), Fermi–Dirac pelo grande canônico, expansão de Sommerfeld, contagem formal de estados e \(g(\varepsilon)\).</p>
+
+<h2 id="roteiro">Roteiro por bloco</h2>
+
+<div class="block">
+<h3>1 · Contexto <span class="min">0–2 min</span></h3>
+<p>Thomson identifica o elétron em 1897; três anos depois Drude propõe que um metal é um <i>gás</i> desses elétrons. Leis empíricas já conhecidas: Ohm (\(\mathbf j=\sigma\mathbf E\)) e Wiedemann–Franz (1853: \(\kappa/\sigma\propto T\), com a mesma constante para metais diferentes).</p>
+<p>Escrever a pergunta condutora e anunciar o arco em uma frase.</p>
+</div>
+
+<div class="block">
+<h3>2 · O gás de elétrons <span class="min">2–5 min</span></h3>
+<p>Elétrons de valência se desprendem; íons formam fundo fixo. Densidade com \(Z\) elétrons por átomo:</p>
+$$n=N_A\frac{Z\rho_m}{A}$$
+<div class="num">Cu (\(Z=1\), \(\rho_m=8{,}96\) g/cm³, \(A=63{,}5\)): \(n\approx 8{,}5\times10^{22}\) cm⁻³ · gás ideal nas CNTP: \(2{,}7\times10^{19}\) cm⁻³ → <b>~mil vezes mais denso</b></div>
+<p class="say">"Guardem esse fator mil. Tratar isso como gás clássico diluído é, no mínimo, ousado. Vai voltar."</p>
+</div>
+
+<div class="block">
+<h3>3 · As quatro hipóteses <span class="min">5–9 min</span></h3>
+<ol>
+<li><b>Livres:</b> despreza-se a interação elétron–íon entre colisões.</li>
+<li><b>Independentes:</b> despreza-se a interação elétron–elétron.</li>
+<li><b>Colisões instantâneas</b> que mudam abruptamente a velocidade (Drude pensava em colisão com íons).</li>
+<li><b>Tempo de relaxação \(\tau\):</b> probabilidade de colidir em \(dt\) é \(dt/\tau\), independente de posição e velocidade; após a colisão a velocidade é aleatória, com módulo da temperatura local.</li>
+</ol>
+<p>Ficam no painel esquerdo a aula inteira — Sommerfeld vai mantê-las.</p>
+</div>
+
+<div class="block">
+<h3>4 · Equação de movimento <span class="min">9–15 min</span></h3>
+<p>Momento médio \(\mathbf p(t)\). Entre \(t\) e \(t+dt\): fração \(1-dt/\tau\) não colide e vai a \(\mathbf p+\mathbf F dt\); fração \(dt/\tau\) colide, sai com média nula e contribui só \(O(dt^2)\).</p>
+$$\mathbf p(t+dt)=\Big(1-\frac{dt}{\tau}\Big)\big[\mathbf p(t)+\mathbf F\,dt\big]+O(dt^2)
+\;\Longrightarrow\;
+\boxed{\frac{d\mathbf p}{dt}=-\frac{\mathbf p}{\tau}+\mathbf F}$$
+<details><summary>Detalhes para dominar (não precisa ir tudo ao quadro)</summary><div>
+<p><b>Onde cada hipótese entra.</b> \(dt/\tau\) independente de \(\mathbf p\) → termo de perda linear em \(\mathbf p\). Isotropia pós-colisão → média nula da população que colidiu.</p>
+<p><b>Leitura física.</b> \(-\mathbf p/\tau\) parece atrito, mas nenhum elétron é "freado": as colisões apagam a <i>memória</i> do momento ganho do campo. Sem campo, \(\mathbf p=\mathbf p_0e^{-t/\tau}\).</p>
+<p><b>Alternativa se pedirem.</b> Tempo desde a última colisão distribuído como \(e^{-t/\tau}dt/\tau\); \(\langle\mathbf p\rangle=\mathbf F\langle t\rangle=\mathbf F\tau\). Armadilha: \(\langle t\rangle=\tau\), não \(\tau/2\).</p>
+<p><i>A&amp;M cap. 1, "DC Electrical Conductivity"; Apêndice B.</i></p>
+</div></details>
+</div>
+
+<div class="block">
+<h3>5 · Condutividade DC <span class="min">15–19 min</span></h3>
+<p>Estacionário, \(\mathbf F=-e\mathbf E\):</p>
+$$\mathbf p=-e\tau\mathbf E,\qquad \mathbf j=-ne\frac{\mathbf p}{m}=\frac{ne^2\tau}{m}\mathbf E
+\;\Longrightarrow\;\boxed{\sigma=\frac{ne^2\tau}{m}}$$
+<p class="say">"A lei de Ohm sai como consequência, não como hipótese — e a linearidade vem de uma coisa só: \(\tau\) não depende de \(\mathbf E\)."</p>
+<div class="num">Invertendo, \(\tau=m/ne^2\rho\). Cu, 300 K, \(\rho\approx1{,}7\ \mu\Omega\cdot\)cm: <b>\(\tau\approx2{,}5\times10^{-14}\) s</b></div>
+</div>
+
+<div class="block">
+<h3>6 · Implicações <span class="min">19–22 min</span></h3>
+<p>Velocidade térmica clássica \(v_0=\sqrt{3k_BT/m}\approx10^7\) cm/s → \(\ell=v_0\tau\sim\) algumas dezenas de Å, da ordem de poucos espaçamentos atômicos. Por décadas, lido como confirmação de colisão com íons.</p>
+<p>Mas a baixa temperatura, em amostras puras, \(\rho\) cai por várias ordens de grandeza e \(\ell\) chega a fração de mm — \(10^5\) espaçamentos. <b>H3 está errada:</b> a rede perfeita não espalha; quem espalha são impurezas, defeitos, fônons. (Só a mecânica quântica explica.)</p>
+<p class="say">Primeiro corte se estiver atrasado: reduzir este bloco a uma frase.</p>
+</div>
+
+<div class="block">
+<h3>7 · Wiedemann–Franz clássico <span class="min">22–27 min</span></h3>
+<p>Apresentar sem deduzir, com uma frase de justificativa: um elétron que cruza um plano veio, em média, de uma distância \(v\tau\), trazendo a energia térmica de lá; a média em 3D dá o fator ⅓.</p>
+$$\kappa=\tfrac13\,v^2\tau\,c_v$$
+<p>Ingredientes clássicos: \(v^2=3k_BT/m\), \(c_v=\tfrac32nk_B\):</p>
+$$\kappa=\frac32\frac{nk_B^2\tau T}{m}\quad\Longrightarrow\quad
+\frac{\kappa}{\sigma T}=\frac32\Big(\frac{k_B}{e}\Big)^2\approx1{,}1\times10^{-8}\ \mathrm{W\Omega/K^2}$$
+<p class="say">"\(\tau\), \(n\) e \(m\) cancelam ao mesmo tempo. Uma constante universal, sem parâmetro ajustável. Respondemos à pergunta… ou quase."</p>
+<div class="num">Medido: \(L\approx2{,}2\)–\(2{,}4\times10^{-8}\) W·Ω/K² → erro de fator ~2. (Nota histórica: Drude errou um fator 2 em \(\sigma\) e publicou ~2,2 — acordo aparentemente perfeito.)</div>
+<p>Aqui vale mostrar a <b>tabela impressa / slide</b> com \(L\) medido de 4–5 metais.</p>
+</div>
+
+<div class="block">
+<h3>8 · A crise <span class="min">27–30 min</span></h3>
+<p>Se Drude estivesse certo, os elétrons somariam \(\tfrac32nk_B\) aos \(3nk_B\) da rede: metais teriam calor específico ~50% maior que isolantes. <b>Não têm.</b> A contribuição eletrônica medida é ~100 vezes menor.</p>
+<div class="q" style="font-size:1rem"><b>Pergunta deixada no ar de propósito</b>O modelo acerta \(\kappa/\sigma T\) dentro de um fator 2 e erra \(c_v\) por 100 — mas \(\kappa\) foi calculado com esse mesmo \(c_v\). Como?</div>
+<p><b>Diagnóstico:</b> as hipóteses não são o problema; a <b>estatística</b> é. Maxwell–Boltzmann aplicada a um gás mil vezes mais denso que um gás ordinário, de férmions idênticos — e Pauli ainda não existia em 1900.</p>
+</div>
+
+<div class="block">
+<h3>9 · Sommerfeld <span class="min">30–36 min</span></h3>
+<p><b>1928: mantém H1–H4; troca só Maxwell–Boltzmann por Fermi–Dirac.</b></p>
+$$f(\varepsilon)=\frac{1}{e^{(\varepsilon-\mu)/k_BT}+1}$$
+<p>Estado fundamental: ondas planas, \(\varepsilon=\hbar^2k^2/2m\), dois elétrons por \(\mathbf k\). Preenchendo de baixo para cima, os estados ocupados formam uma <b>esfera de raio \(k_F\)</b> (desenhar).</p>
+$$n=\frac{k_F^3}{3\pi^2}\qquad k_F=(3\pi^2n)^{1/3}$$
+<div class="num">Cu: \(k_F\approx1{,}36\) Å⁻¹ · <b>\(\varepsilon_F\approx7{,}0\) eV</b> · <b>\(T_F\approx8{,}2\times10^4\) K</b> · <b>\(v_F\approx1{,}6\times10^8\) cm/s</b> (~0,5% de \(c\))</div>
+$$\boxed{T_{\text{amb}}\approx300\ \mathrm K\ \ll\ T_F\sim10^5\ \mathrm K}$$
+<p class="say">"Para os elétrons de condução, a temperatura ambiente é uma temperatura baixíssima. O gás está praticamente no estado fundamental." — repetir essa ideia três vezes na aula.</p>
+<details><summary>De onde vem \(n=k_F^3/3\pi^2\) (para a arguição)</summary><div>
+<p>Born–von Karman: \(k_i=2\pi n_i/L\), cada estado ocupa \((2\pi/L)^3=8\pi^3/V\) no espaço \(k\). Com spin:</p>
+$$N=2\cdot\frac{\tfrac43\pi k_F^3}{8\pi^3/V}=\frac{Vk_F^3}{3\pi^2}$$
+<p>Por que periódicas: propriedades de bulk não dependem da escolha (diferenças são de superfície); dão ondas propagantes com \(\mathbf k\) definido, úteis para corrente.</p>
+<p>Atalho para conferir: \(\varepsilon_F=50{,}1\ \mathrm{eV}/(r_s/a_0)^2\); Cu, \(r_s/a_0=2{,}67\) → 7,0 eV.</p>
+</div></details>
+</div>
+
+<div class="block">
+<h3>10 · Só a casca participa <span class="min">36–41 min</span></h3>
+<p>Só elétrons numa faixa \(\sim k_BT\) em torno de \(\varepsilon_F\) têm estados vazios acessíveis. O resto está congelado por Pauli.</p>
+<ul>
+<li>fração excitável: \(\sim k_BT/\varepsilon_F\) (~1%)</li>
+<li>cada um ganha \(\sim k_BT\)</li>
+</ul>
+$$u-u_0\sim n\frac{(k_BT)^2}{\varepsilon_F}\quad\Longrightarrow\quad c_v\sim nk_B\frac{T}{T_F}$$
+<p>O cálculo exato (expansão de Sommerfeld — só citar) dá o coeficiente:</p>
+$$c_v=\frac{\pi^2}{2}nk_B\frac{T}{T_F}\qquad\frac{c_v^{\,\rm FD}}{c_v^{\,\rm MB}}=\frac{\pi^2}{3}\frac{T}{T_F}\approx10^{-2}$$
+<p>Exatamente o fator 100 que faltava — e <b>linear em \(T\)</b>, assinatura experimental clara.</p>
+<p>Quem transporta calor são os da superfície de Fermi: a velocidade relevante é \(v_F\), que <b>não depende de \(T\)</b> e é ~10× a térmica clássica (\(v^2\) ~100×).</p>
+</div>
+
+<div class="block">
+<h3>11 · O cancelamento <span class="min">41–46 min · clímax</span></h3>
+<div class="tablewrap"><table>
+<tr><th>Ingrediente</th><th>Drude</th><th>Sommerfeld</th><th>Razão S/D</th></tr>
+<tr><td>\(c_v\)</td><td>\(\tfrac32nk_B\)</td><td>\(\tfrac{\pi^2}{2}nk_B\,T/T_F\)</td><td>\(\tfrac{\pi^2}{3}\tfrac{T}{T_F}\sim10^{-2}\)</td></tr>
+<tr><td>\(v^2\)</td><td>\(3k_BT/m\)</td><td>\(2\varepsilon_F/m\)</td><td>\(\tfrac23\tfrac{T_F}{T}\sim10^{+2}\)</td></tr>
+<tr><td><b>\(v^2c_v\)</b></td><td></td><td></td><td><b>\(2\pi^2/9\approx2{,}2\)</b></td></tr>
+</table></div>
+<p>\(T\) e \(T_F\) cancelam <i>exatamente</i> (expoentes +1 e −1). Em \(\kappa=\tfrac13v^2\tau c_v\):</p>
+$$\kappa=\frac{\pi^2}{3}\frac{nk_B^2\tau T}{m}\quad\Longrightarrow\quad
+\boxed{\frac{\kappa}{\sigma T}=\frac{\pi^2}{3}\Big(\frac{k_B}{e}\Big)^2=L_0=2{,}44\times10^{-8}\ \mathrm{W\Omega/K^2}}$$
+<p>Agora com acordo de poucos por cento (voltar à tabela de \(L\) medido).</p>
+<p class="say">"Drude errou \(c_v\) por 100 para cima e \(v^2\) por 100 para baixo. Wiedemann–Franz só enxerga o produto, e por isso era cego aos dois erros. Uma coincidência produtiva: manteve o programa de elétrons livres vivo por 28 anos."</p>
+<p>Responder explicitamente a pergunta condutora apontando para o painel.</p>
+</div>
+
+<div class="block">
+<h3>12 · Fechamento <span class="min">46–49 min</span></h3>
+<p><b>Ainda sem explicação:</b> \(R_H\) positivo em Al, Be, In; por que uns sólidos são metais e outros isolantes (diamante × grafite); a origem física de \(\tau\).</p>
+<p><b>Diagnóstico comum:</b> H1 — desprezar o potencial dos íons — não se sustenta. O próximo passo é restaurar a <b>periodicidade</b>: Bloch, bandas. Próxima aula.</p>
+<p class="say">"Os elétrons de um metal são livres o bastante para Sommerfeld funcionar, e presos o bastante para que ele não baste."</p>
+</div>
+
+<h2 id="quadro">Mapa de quadro</h2>
+<div class="panels">
+<div class="panel"><h4>Esquerdo · fixo</h4><ul>
+<li>Pergunta condutora</li><li>H1–H4</li><li>\(\sigma=ne^2\tau/m\)</li><li>\(\kappa=\tfrac13v^2\tau c_v\)</li></ul></div>
+<div class="panel"><h4>Central · rotativo</h4><ul>
+<li>Dedução de \(d\mathbf p/dt\)</li><li>\(L_{cl}=\tfrac32(k_B/e)^2\)</li><li>Esfera de Fermi + números do Cu</li><li>Casca \(k_BT\) → \(c_v\)</li></ul></div>
+<div class="panel"><h4>Direito · placar</h4><ul>
+<li>Tabela do cancelamento</li><li>\(L_0=\tfrac{\pi^2}{3}(k_B/e)^2\)</li><li>Lista do que falta</li></ul></div>
+</div>
+
+<h2 id="estudo">O que estudar</h2>
+
+<div class="tier tier1">
+<h3>1 · Treinar até sair fluido no quadro</h3>
+<ul>
+<li>Equação de movimento + \(\sigma\) (blocos 4–5). Cronometrar: 6 + 4 min.</li>
+<li>\(L_{cl}\) a partir de \(\kappa=\tfrac13v^2\tau c_v\) (bloco 7).</li>
+<li>Números do Cu de cor: \(n\), \(\tau\), \(\varepsilon_F\), \(T_F\), \(v_F\).</li>
+<li>Tabela do cancelamento (bloco 11) — o momento mais importante.</li>
+<li>Ensaio cronometrado do trecho 0–27 min. Passou de 30? Cortar o bloco 6.</li>
+</ul>
+</div>
+
+<div class="tier tier2">
+<h3>2 · Entender bem, sem ir ao quadro</h3>
+<ul>
+<li>Meio caminho livre e a origem do ⅓ (\(\langle v_x^2\rangle=\tfrac13\langle v^2\rangle\)).</li>
+<li>Pauli e a casca \(k_BT\); por que \(v_F\) e não velocidade térmica.</li>
+<li>Contagem de estados e \(n=k_F^3/3\pi^2\).</li>
+<li>As perguntas da arguição abaixo.</li>
+</ul>
+</div>
+
+<div class="tier tier3">
+<h3>3 · Ler uma vez, se sobrar tempo</h3>
+<ul>
+<li>\(c=\gamma T+AT^3\): gráfico \(c/T\times T^2\), intercepto \(\gamma\) → \(g(\varepsilon_F)\) e \(m^*\). Banca experimental pode perguntar como se mede.</li>
+<li>\(\mu(T)=\varepsilon_F[1-\tfrac{\pi^2}{12}(k_BT/\varepsilon_F)^2]\): correção ~\(10^{-5}\) no Cu.</li>
+<li>\(\omega_p\) em uma frase: sucesso de Drude que sobrevive (transparência UV dos alcalinos).</li>
+</ul>
+</div>
+
+<div class="tier tier4">
+<h3>Pode ignorar para esta aula</h3>
+<p>Condutividade AC formal, dedução do Hall, poder termoelétrico, \(n\lambda^3\), Fermi–Dirac pelo grande canônico, expansão de Sommerfeld e \(c_v\) formal, \(g(\varepsilon)\) completo. Estão no roteiro completo se precisar.</p>
+</div>
+
+<h2 id="arguicao">Arguição prevista</h2>
+<dl class="qa">
+<dt>Por que o espalhamento elétron–elétron é desprezível com densidade tão alta?</dt>
+<dd>Pauli: os dois elétrons precisam de estados finais vazios, só disponíveis na casca \(k_BT\). Espaço de fase \(\propto(T/T_F)^2\sim10^{-4}\). Blindagem também reduz o alcance.</dd>
+<dt>Se \(v_F\sim10^8\) cm/s, por que a deriva é de cm/s?</dt>
+<dd>A esfera de Fermi parada não carrega corrente (simetria). O campo desloca a esfera inteira de \(\delta k=eE\tau/\hbar\), minúsculo frente a \(k_F\).</dd>
+<dt>O \(\tau\) é o mesmo para carga e calor?</dt>
+<dd>Só com espalhamento elástico — é isso que dá WF. Com fônons em \(T\) intermediária (inelástico, pequeno ângulo), a corrente térmica degrada mais que a elétrica e \(L<L_0\). WF vale acima de \(\theta_D\) e no regime residual.</dd>
+<dt>E a condução térmica por fônons?</dt>
+<dd>Num bom metal, 1–2 ordens de grandeza menor. Em ligas desordenadas pode competir.</dd>
+<dt>Como se mede \(g(\varepsilon_F)\)?</dt>
+<dd>Calor específico a baixa \(T\): \(c/T=\gamma+AT^2\); \(\gamma=\tfrac{\pi^2}{3}k_B^2g(\varepsilon_F)\). O desvio do valor de elétrons livres define \(m^*\).</dd>
+<dt>Por que \(R_H>0\) no Al?</dt>
+<dd>\(R_H=-1/nec\) fixa o sinal pela carga; nenhum parâmetro muda isso. Exige bandas: perto do topo de banda quase cheia os portadores efetivos são buracos.</dd>
+<dt>Qual o status do modelo hoje?</dt>
+<dd>Referência não interagente. Funciona apesar da interação forte por causa do líquido de Fermi de Landau: quasipartículas com \(m\to m^*\). E \(\sigma(\omega)\) de Drude é padrão em óptica até hoje.</dd>
+<dt>Por que esta aula neste ponto do curso?</dt>
+<dd>Estabelece o vocabulário (\(\tau,\ell,k_F,\varepsilon_F\)) e cria a necessidade das bandas por insuficiência demonstrada, não por decreto.</dd>
+</dl>
+
+<h2 id="corte">Se atrasar</h2>
+<div class="tablewrap"><table>
+<tr><th>Atraso</th><th>Corte</th></tr>
+<tr><td>até 3 min</td><td>Bloco 6 (implicações) vira uma frase.</td></tr>
+<tr><td>até 5 min</td><td>No bloco 9, só escrever o resultado \(k_F=(3\pi^2n)^{1/3}\), sem comentar contagem.</td></tr>
+<tr><td>mais que isso</td><td>Fechamento em 1 min, só com a frase final. <b>Nunca cortar o bloco 11.</b></td></tr>
+</table></div>
+
+<footer>
+<p><b>Referências:</b> Ashcroft &amp; Mermin, <i>Solid State Physics</i>, caps. 1–2 (Tabelas 1.6 e 2.1). Simon, <i>The Oxford Solid State Basics</i>, caps. 3–4 (narrativa do cancelamento). Kittel, cap. 6. Reif, cap. 12 (fator ⅓). Salinas, cap. 8 (Fermi–Dirac).</p>
+<p>Conferir os valores de \(L\) medido na Tabela 1.6 do A&amp;M antes da aula.</p>
+</footer>
+</div>
+</body>
+</html>
